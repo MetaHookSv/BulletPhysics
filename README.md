@@ -4,7 +4,7 @@
 
 BulletPhysics is a MetaHookSv client physics plugin for GoldSrc/SvEngine games.
 It provides ragdolls, jiggle bones, collision with moving brushes, buoyancy,
-barnacle/gargantua interactions and a in-game physics configuration editor.
+barnacle/gargantua interactions and an in-game physics configuration editor.
 
 ## Quick start
 
