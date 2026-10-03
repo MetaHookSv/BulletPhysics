@@ -127,7 +127,7 @@ flowchart TD
 - src/ClientEntityManager.*, src/CounterStrike.* - entity types/indices, player-death state, CS/CS:CZ specifics, model scaling, current-frame emitted/visible state, and entity-model mapping.
 - src/VGUI2ExtensionImport.*, Viewport.*, PhysicDebugGUI.*, PhysicEditorDialog.*, Physic*{Page,Panel,Dialog}.*, AnimControl*.*, BaseUI.cpp, GameUI.cpp, ClientVGUI.cpp - VGUI2Extension interfaces, debug viewport, inspect/select, and configuration editing UI.
 - src/PhysicUTIL.*, src/util.*, src/mathlib2.* - configuration serialization, model-integrity validation, type/factor conversion, and other physics/math utilities.
-- src/tests/client_gamedata_tests.cpp - gamedata tests, enabled by BULLETPHYSICS_BUILD_TESTS.
+- tests/ - configuration, shipped-asset and Bullet backend regression tests, enabled by BULLETPHYSICS_BUILD_TESTS; see [[build_and_verification]].
 - CMakeLists.txt, cmake/Sources.cmake, cmake/Dependencies.cmake, cmake/VCLTL.cmake - Windows x86 C++20 DLL build, explicit SDK/plugin compile list and pinned dependencies.
 - docs/en/features.md, docs/zh-CN/features.md - functionality and legacy ragdoll configuration; assets/svencoop/bulletphysics/* and assets/svencoop_downloads/* - UI/localization and physics runtime resources.
 

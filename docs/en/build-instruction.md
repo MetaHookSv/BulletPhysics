@@ -76,9 +76,19 @@ scripts\build-BulletPhysics-x86-Release.bat -DBULLETPHYSICS_BUILD_TESTS=ON
 ctest --test-dir build/x86/Release -C Release --output-on-failure
 ```
 
-The test invokes the real `Client_FillAddress` with a simulated host API. It covers
-the 10257 slot, its absence in 8948, stale-pointer clearing and fatal required-symbol
-failures. Assertions remain enabled in Release. This test needs no game DLL or GL context.
+The tests live in `tests/` and link the plugin's own object files, replacing only the
+host services that the engine and `vgui2.dll` provide:
+
+- `physic_config_tests`: `*_physics.txt` save/load round trips, object types and defaults,
+  model integrity checks, legacy `*_ragdoll.txt` parsing and editor-save migration, the
+  configuration registry and editor helpers.
+- `shipped_physic_assets_tests`: loads every physics configuration under
+  `assets/svencoop_downloads`, checks component references, OBJ meshes and Bullet colliders,
+  and confirms an editor save keeps all data.
+- `bullet_backend_tests`: GoldSrc/Bullet transform conversion, collider and constraint
+  parameter mapping, legacy joint migration and the `bv_simrate` clamp.
+
+Assertions remain enabled in Release. The tests need no game DLL or GL context.
 
 ## CI and packaging
 

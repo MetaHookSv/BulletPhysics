@@ -118,12 +118,25 @@ if(BULLETPHYSICS_SYNC_GAMEDATA)
 endif()
 install(DIRECTORY "${BULLETPHYSICS_GAMEDATA_DIR}/" DESTINATION svencoop/metahook/gamedata/bulletphysics OPTIONAL)
 
-option(BULLETPHYSICS_BUILD_TESTS "Build the BulletPhysics client gamedata regression tests" OFF)
+option(BULLETPHYSICS_BUILD_TESTS "Build the BulletPhysics regression tests" OFF)
 if(BULLETPHYSICS_BUILD_TESTS)
     enable_testing()
-    add_executable(client_gamedata_tests src/tests/client_gamedata_tests.cpp)
-    target_link_libraries(client_gamedata_tests PRIVATE bulletphysics_settings)
-    target_compile_options(client_gamedata_tests PRIVATE /UNDEBUG /Gy $<$<CONFIG:Release>:/O1>)
-    target_link_options(client_gamedata_tests PRIVATE /OPT:REF /INCREMENTAL:NO)
-    add_test(NAME client_gamedata_tests COMMAND client_gamedata_tests)
+    # Tests link the plugin's own objects instead of stubbing its internals. test_support.cpp
+    # recompiles BasePhysicManager.cpp to reach its file-local configuration serializers.
+    add_library(bulletphysics_test_support STATIC tests/test_support.cpp
+        "$<FILTER:$<TARGET_OBJECTS:BulletPhysics>,EXCLUDE,/BasePhysicManager\\.obj$>")
+    target_link_libraries(bulletphysics_test_support PUBLIC bulletphysics_settings libglew_static ${bullet_libraries} opengl32)
+    # Match the plugin objects and keep assertions enabled in Release.
+    target_compile_definitions(bulletphysics_test_support PUBLIC $<$<CONFIG:Debug>:_DEBUG>)
+    target_compile_options(bulletphysics_test_support PUBLIC /UNDEBUG)
+    # Release plugin objects carry /GL code.
+    set_target_properties(bulletphysics_test_support PROPERTIES STATIC_LIBRARY_OPTIONS "$<$<CONFIG:Release>:/LTCG>")
+    foreach(test physic_config_tests shipped_physic_assets_tests bullet_backend_tests)
+        add_executable(${test} "tests/${test}.cpp")
+        target_link_libraries(${test} PRIVATE bulletphysics_test_support)
+        target_link_options(${test} PRIVATE /INCREMENTAL:NO $<$<CONFIG:Release>:/LTCG>)
+    endforeach()
+    add_test(NAME physic_config_tests COMMAND physic_config_tests)
+    add_test(NAME shipped_physic_assets_tests COMMAND shipped_physic_assets_tests "${CMAKE_CURRENT_SOURCE_DIR}/assets/svencoop_downloads")
+    add_test(NAME bullet_backend_tests COMMAND bullet_backend_tests)
 endif()

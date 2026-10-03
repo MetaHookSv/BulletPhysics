@@ -65,8 +65,15 @@ scripts\build-BulletPhysics-x86-Release.bat -DBULLETPHYSICS_BUILD_TESTS=ON
 ctest --test-dir build/x86/Release -C Release --output-on-failure
 ```
 
-模拟宿主 API 并调用真实 `Client_FillAddress`，验证 10257 槽解析、8948 正常缺失、
-旧指针清除，以及其他必需符号缺失时仍报错。Release 保留断言，不需要游戏 DLL 或 GL context。
+测试位于 `tests/`，直接链接插件自身的目标文件，只替代引擎与 `vgui2.dll` 提供的宿主服务：
+
+- `physic_config_tests`：`*_physics.txt` 保存/读取往返、对象类型与默认值、模型完整性校验、
+  旧版 `*_ragdoll.txt` 解析与编辑器另存迁移、配置注册表与编辑器工具函数。
+- `shipped_physic_assets_tests`：解析 `assets/svencoop_downloads` 中所有物理配置，检查组件引用、
+  OBJ 网格与 Bullet 碰撞体，并确认编辑器另存不丢失数据。
+- `bullet_backend_tests`：GoldSrc/Bullet 变换换算、碰撞体与约束参数映射、旧版关节迁移、`bv_simrate` 限幅。
+
+Release 保留断言，不需要游戏 DLL 或 GL context。
 
 ## CI 与打包
 

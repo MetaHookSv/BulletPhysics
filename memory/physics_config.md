@@ -105,6 +105,10 @@ Related implementation: `src/BasePhysicManager.cpp`
 - The legacy result is a `CClientRagdollObjectConfig`, with the following flags set explicitly:
   - `flags |= PhysicObjectFlag_FromConfig`
   - `flags |= PhysicObjectFlag_OverrideStudioCheckBBox`
+- Generated component names must stay unique because the new-format writer keys components by name:
+  - `[WaterControl]`: each line is one detection point stored as the behavior `origin`; the first point on a rigid body is `SimpleBuoyancy|<rigidbody>`, later ones `SimpleBuoyancy|<rigidbody>|1`, `|2`, ...
+  - `[CameraControl]` (undocumented in `docs/`): all lines adjust one `HeadCamera` (needs a `Head` rigid body) and one `PelvisCamera` (needs `Pelvis`).
+- An editor save converts a legacy configuration into `*_physics.txt` without losing fields; `tests/physic_config_tests.cpp` and `tests/shipped_physic_assets_tests.cpp` cover this.
 
 Related implementation: `src/BasePhysicManager.cpp`
 
@@ -152,7 +156,7 @@ Related implementation: `src/PhysicDebugGUI.cpp`
 - Entity flow: `CreatePhysicObjectForEntity` → `CreatePhysicObjectForStudioModel/BrushModel` → `CreatePhysicObjectFromConfig`.
 - `CreatePhysicObjectFromConfig`:
   1) Obtains the configuration via `LoadPhysicObjectConfigForModel(mod)`
-  2) `LoadAdditionalResourcesForConfig(config)`: triggers mesh/index-array cache loading for `collisionShape.resourcePath`
+  2) `LoadAdditionalResourcesForConfig(config)`: triggers mesh/index-array cache loading for `collisionShape.resourcePath`; a missing or unparsable OBJ is cached with `PhysicIndexArrayFlag_LoadFailed`, and the `TriangleMesh` collider is then not created
   3) Creates the matching physics object (Ragdoll/Dynamic/Static) according to `config->type`, then calls `Build(CreationParam)`
 - Applying editor changes: the common path is `ClientPhysicManager()->RebuildPhysicObjectEx2(pPhysicObject, pPhysicObjectConfig)`, which feeds the new configuration to the object's `Rebuild()`.
 
@@ -292,6 +296,7 @@ The name of each child key under `constraints` becomes `CClientConstraintConfig:
   - `useGlobalJointOriginFromOther` (default false)
   - `useRigidBodyDistanceAsLinearLimit` (default false)
   - `useSeperateLocalFrame` (default false)
+- `rotOrder`: Euler rotation order for `Dof6Spring` (`0=XYZ` … `5=ZYX`, default `0`; written only when non-default).
 - `debugDrawLevel`: debug drawing level (default `BULLET_DEFAULT_DEBUG_DRAW_LEVEL`).
 - `maxTolerantLinearError`: maximum tolerable linear error (default `BULLET_DEFAULT_MAX_TOLERANT_LINEAR_ERROR`).
 - `isLegacyConfig`: legacy-compatibility flag (default false).
@@ -303,8 +308,9 @@ The name of each child key under `constraints` becomes `CClientConstraintConfig:
 - `ConeTwist`: `ConeTwistSwingSpanLimit1/ConeTwistSwingSpanLimit2/ConeTwistTwistSpanLimit/ConeTwistSoftness/ConeTwistBiasFactor/ConeTwistRelaxationFactor/LinearERP/LinearCFM/AngularERP/AngularCFM`
 - `Hinge`: `HingeLowLimit/HingeHighLimit/HingeSoftness/HingeBiasFactor/HingeRelaxationFactor/AngularERP/AngularCFM/AngularStopERP/AngularStopCFM`
 - `Point`: `AngularERP/AngularCFM`
-- `Slider`: `SliderLowerLinearLimit/SliderUpperLinearLimit/SliderLowerAngularLimit/SliderUpperAngularLimit/LinearCFM/LinearStopERP/LinearStopCFM/AngularCFM/AngularStopERP/AngularStopCFM`
-- `Dof6`: `Dof6LowerLinearLimitX/Y/Z/Dof6UpperLinearLimitX/Y/Z/Dof6LowerAngularLimitX/Y/Z/Dof6UpperAngularLimitX/Y/Z/LinearCFM/LinearStopERP/LinearStopCFM/AngularCFM/AngularStopERP/AngularStopCFM`
+- `Slider`: `SliderLowerLinearLimit/SliderUpperLinearLimit/SliderLowerAngularLimit/SliderUpperAngularLimit/LinearCFM/LinearStopERP/LinearStopCFM/AngularCFM/AngularStopERP/AngularStopCFM/RigidBodyLinearDistanceOffset`
+- `Dof6`: `Dof6LowerLinearLimitX/Y/Z/Dof6UpperLinearLimitX/Y/Z/Dof6LowerAngularLimitX/Y/Z/Dof6UpperAngularLimitX/Y/Z/LinearCFM/LinearStopERP/LinearStopCFM/AngularCFM/AngularStopERP/AngularStopCFM/RigidBodyLinearDistanceOffset`
+- `RigidBodyLinearDistanceOffset` is added to the body distance when `useRigidBodyDistanceAsLinearLimit` scales the linear limits (legacy barnacle tongues); `Dof6Spring` inherits it from `Dof6`.
 - `Dof6Spring`: adds the following on top of `Dof6`
   - `Dof6SpringEnableLinearSpringX/Y/Z`, `Dof6SpringEnableAngularSpringX/Y/Z`
   - `Dof6SpringLinearStiffnessX/Y/Z`, `Dof6SpringAngularStiffnessX/Y/Z`
@@ -320,6 +326,7 @@ The name of each child key under `physicBehaviors` becomes `CClientPhysicBehavio
 - `rigidbodyA` / `rigidbodyB`: referenced rigid-body names (whether used depends on the behavior type).
 - `constraint`: referenced constraint name (whether used depends on the behavior type).
 - `barnacle` / `gargantua`: behavior flags (bool).
+- `debugDrawLevel`: debug drawing level (default `BULLET_DEFAULT_DEBUG_DRAW_LEVEL`; written only when non-default).
 - `origin` / `angles`: local pose of the behavior (the string vector `"x y z"`).
 
 `physicBehaviors/"<name>"/factors`: behavior parameter table (float; only entries relevant to the current `type` take effect; omitted values are internally represented as `NAN`, meaning “not provided”).
