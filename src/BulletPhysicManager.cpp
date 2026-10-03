@@ -45,7 +45,9 @@ btQuaternion FromToRotaion(btVector3 fromDirection, btVector3 toDirection)
 		auto rotationAxis = up.cross(fromDirection);
 		if (rotationAxis.length() < 0.01) // bad luck, they were parallel, try again!
 		{
-			rotationAxis = up.cross(fromDirection);
+			btVector3 right(1.0f, 0.0f, 0.0f);
+
+			rotationAxis = right.cross(fromDirection);
 		}
 		rotationAxis = rotationAxis.normalize();
 		return btQuaternion(rotationAxis, (float)M_PI);
@@ -694,8 +696,8 @@ btTypedConstraint* BulletCreateConstraint_Dof6Spring(const CClientConstraintConf
 	if ((int)Dof6SpringEnableAngularSpringY >= 1)
 	{
 		pDof6Spring->enableSpring(4, true);
-		pDof6Spring->setStiffness(3, Dof6SpringAngularStiffnessY);
-		pDof6Spring->setDamping(3, Dof6SpringAngularDampingY);
+		pDof6Spring->setStiffness(4, Dof6SpringAngularStiffnessY);
+		pDof6Spring->setDamping(4, Dof6SpringAngularDampingY);
 	}
 
 	if ((int)Dof6SpringEnableAngularSpringZ >= 1)
@@ -1004,6 +1006,13 @@ btCollisionShape* BulletCreateCollisionShapeInternal(const CClientCollisionShape
 		if (!pIndexArray)
 		{
 			gEngfuncs.Con_Printf("BulletCreateCollisionShapeInternal: Could not find IndexArray for \"%s\"!\n", pConfig->resourcePath.c_str());
+			break;
+		}
+
+		// Failed loads stay cached as empty arrays; Bullet cannot build a BVH without triangles.
+		if ((pIndexArray->flags & PhysicIndexArrayFlag_LoadFailed) || pIndexArray->vIndexBuffer.empty())
+		{
+			gEngfuncs.Con_Printf("BulletCreateCollisionShapeInternal: IndexArray for \"%s\" has no triangles!\n", pConfig->resourcePath.c_str());
 			break;
 		}
 

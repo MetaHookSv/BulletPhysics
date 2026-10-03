@@ -1301,6 +1301,8 @@ static std::shared_ptr<CClientConstraintConfig> LoadConstraintFromKeyValues(KeyV
 	LOAD_BOOL_FROM_KEYVALUES(useSeperateLocalFrame, false);
 #undef LOAD_BOOL_FROM_KEYVALUES
 
+	pConstraintConfig->rotOrder = pConstraintSubKey->GetInt("rotOrder", PhysicRotOrder_XYZ);
+
 	pConstraintConfig->debugDrawLevel = pConstraintSubKey->GetInt("debugDrawLevel", BULLET_DEFAULT_DEBUG_DRAW_LEVEL);
 
 	pConstraintConfig->maxTolerantLinearError = pConstraintSubKey->GetFloat("maxTolerantLinearError", BULLET_DEFAULT_MAX_TOLERANT_LINEAR_ERROR);
@@ -1376,6 +1378,7 @@ static std::shared_ptr<CClientConstraintConfig> LoadConstraintFromKeyValues(KeyV
 			LOAD_FACTOR_FLOAT(AngularCFM);
 			LOAD_FACTOR_FLOAT(AngularStopERP);
 			LOAD_FACTOR_FLOAT(AngularStopCFM);
+			LOAD_FACTOR_FLOAT(RigidBodyLinearDistanceOffset);
 			break;
 		}
 		case PhysicConstraint_Dof6:
@@ -1398,6 +1401,7 @@ static std::shared_ptr<CClientConstraintConfig> LoadConstraintFromKeyValues(KeyV
 			LOAD_FACTOR_FLOAT(AngularCFM);
 			LOAD_FACTOR_FLOAT(AngularStopERP);
 			LOAD_FACTOR_FLOAT(AngularStopCFM);
+			LOAD_FACTOR_FLOAT(RigidBodyLinearDistanceOffset);
 			break;
 		}
 		case PhysicConstraint_Dof6Spring:
@@ -1438,6 +1442,7 @@ static std::shared_ptr<CClientConstraintConfig> LoadConstraintFromKeyValues(KeyV
 			LOAD_FACTOR_FLOAT(AngularCFM);
 			LOAD_FACTOR_FLOAT(AngularStopERP);
 			LOAD_FACTOR_FLOAT(AngularStopCFM);
+			LOAD_FACTOR_FLOAT(RigidBodyLinearDistanceOffset);
 			break;
 		}
 		case PhysicConstraint_Fixed:
@@ -1535,6 +1540,7 @@ static std::shared_ptr<CClientPhysicBehaviorConfig> LoadPhysicBehaviorFromKeyVal
 	if (pPhysicBehaviorSubKey->GetBool("gargantua"))
 		pPhysicBehaviorConfig->flags |= PhysicBehaviorFlag_Gargantua;
 
+	pPhysicBehaviorConfig->debugDrawLevel = pPhysicBehaviorSubKey->GetInt("debugDrawLevel", BULLET_DEFAULT_DEBUG_DRAW_LEVEL);
 
 	auto origin = pPhysicBehaviorSubKey->GetString("origin");
 
@@ -2034,6 +2040,9 @@ static void AddConstraintsToKeyValues(KeyValues* pKeyValues, const std::vector<s
 					SAVE_BOOL_TO_KEYVALUES(useSeperateLocalFrame, false);
 #undef SAVE_BOOL_TO_KEYVALUES
 
+					if (pConstraintConfig->rotOrder != PhysicRotOrder_XYZ)
+						pConstraintSubKey->SetInt("rotOrder", pConstraintConfig->rotOrder);
+
 					if (pConstraintConfig->debugDrawLevel != BULLET_DEFAULT_DEBUG_DRAW_LEVEL)
 						pConstraintSubKey->SetInt("debugDrawLevel", pConstraintConfig->debugDrawLevel); 
 
@@ -2112,6 +2121,7 @@ static void AddConstraintsToKeyValues(KeyValues* pKeyValues, const std::vector<s
 							SET_FACTOR_FLOAT(AngularCFM);
 							SET_FACTOR_FLOAT(AngularStopERP);
 							SET_FACTOR_FLOAT(AngularStopCFM);
+							SET_FACTOR_FLOAT(RigidBodyLinearDistanceOffset);
 							break;
 						}
 						case PhysicConstraint_Dof6:
@@ -2134,6 +2144,7 @@ static void AddConstraintsToKeyValues(KeyValues* pKeyValues, const std::vector<s
 							SET_FACTOR_FLOAT(AngularCFM);
 							SET_FACTOR_FLOAT(AngularStopERP);
 							SET_FACTOR_FLOAT(AngularStopCFM);
+							SET_FACTOR_FLOAT(RigidBodyLinearDistanceOffset);
 							break;
 						}
 						case PhysicConstraint_Dof6Spring:
@@ -2174,6 +2185,7 @@ static void AddConstraintsToKeyValues(KeyValues* pKeyValues, const std::vector<s
 							SET_FACTOR_FLOAT(AngularCFM);
 							SET_FACTOR_FLOAT(AngularStopERP);
 							SET_FACTOR_FLOAT(AngularStopCFM);
+							SET_FACTOR_FLOAT(RigidBodyLinearDistanceOffset);
 							break;
 						}
 						case PhysicConstraint_Fixed:
@@ -2220,6 +2232,9 @@ static void AddPhysicBehaviorsToKeyValues(KeyValues* pKeyValues, const std::vect
 
 					if (pPhysicBehaviorConfig->flags & PhysicBehaviorFlag_Gargantua)
 						pPhysicBehaviorSubKey->SetBool("gargantua", true);
+
+					if (pPhysicBehaviorConfig->debugDrawLevel != BULLET_DEFAULT_DEBUG_DRAW_LEVEL)
+						pPhysicBehaviorSubKey->SetInt("debugDrawLevel", pPhysicBehaviorConfig->debugDrawLevel);
 
 					if (VectorLength(pPhysicBehaviorConfig->origin) > 0)
 					{
@@ -2837,16 +2852,28 @@ static bool ParseLegacyGargantuaLine(CClientRagdollObjectConfig* pRagdollConfig,
 	return false;
 }
 
+static std::shared_ptr<CClientPhysicBehaviorConfig> FindLegacyPhysicBehavior(CClientRagdollObjectConfig* pRagdollConfig, const std::string& name) {
+	const auto& Itor = std::find_if(pRagdollConfig->PhysicBehaviorConfigs.begin(), pRagdollConfig->PhysicBehaviorConfigs.end(), [&name](const std::shared_ptr<CClientPhysicBehaviorConfig>& p) {
+		return p->name == name;
+	});
+
+	if (Itor != pRagdollConfig->PhysicBehaviorConfigs.end())
+		return (*Itor);
+
+	return nullptr;
+}
+
 static bool ParseLegacyCameraControl(CClientRagdollObjectConfig* pRagdollConfig, const std::string& line) {
 
-	std::shared_ptr<CClientPhysicBehaviorConfig> pPhysicBehaviorConfigFirstPersonView;
-	std::shared_ptr<CClientPhysicBehaviorConfig> pPhysicBehaviorConfigThirdPersonView;
+	// Every line of the section adjusts the same two cameras.
+	auto pPhysicBehaviorConfigFirstPersonView = FindLegacyPhysicBehavior(pRagdollConfig, "HeadCamera");
+	auto pPhysicBehaviorConfigThirdPersonView = FindLegacyPhysicBehavior(pRagdollConfig, "PelvisCamera");
 
 	const auto& HeadItor = std::find_if(pRagdollConfig->RigidBodyConfigs.begin(), pRagdollConfig->RigidBodyConfigs.end(), [](const std::shared_ptr<CClientRigidBodyConfig>& p) {
 		return p->name == "Head";
 	});
 
-	if (HeadItor != pRagdollConfig->RigidBodyConfigs.end())
+	if (!pPhysicBehaviorConfigFirstPersonView && HeadItor != pRagdollConfig->RigidBodyConfigs.end())
 	{
 		pPhysicBehaviorConfigFirstPersonView = std::make_shared<CClientPhysicBehaviorConfig>();
 
@@ -2874,7 +2901,7 @@ static bool ParseLegacyCameraControl(CClientRagdollObjectConfig* pRagdollConfig,
 		return p->name == "Pelvis";
 	});
 
-	if (PelvisItor != pRagdollConfig->RigidBodyConfigs.end())
+	if (!pPhysicBehaviorConfigThirdPersonView && PelvisItor != pRagdollConfig->RigidBodyConfigs.end())
 	{
 		pPhysicBehaviorConfigThirdPersonView = std::make_shared<CClientPhysicBehaviorConfig>();
 
@@ -2884,14 +2911,14 @@ static bool ParseLegacyCameraControl(CClientRagdollObjectConfig* pRagdollConfig,
 		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraActivateOnIdle] = 0;
 		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraActivateOnDeath] = 1;
 		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraActivateOnCaughtByBarnacle] = 1;
-		pPhysicBehaviorConfigFirstPersonView->factors[PhysicBehaviorFactorIdx_CameraSyncViewOrigin] = PhysicBehaviorFactorDefaultValue_CameraSyncViewOrigin;
-		pPhysicBehaviorConfigFirstPersonView->factors[PhysicBehaviorFactorIdx_CameraSyncViewAngles] = 0;
-		pPhysicBehaviorConfigFirstPersonView->factors[PhysicBehaviorFactorIdx_CameraUseSimOrigin] = 0;
-		pPhysicBehaviorConfigFirstPersonView->factors[PhysicBehaviorFactorIdx_CameraOriginalViewHeightStand] = PhysicBehaviorFactorDefaultValue_CameraOriginalViewHeightStand;
-		pPhysicBehaviorConfigFirstPersonView->factors[PhysicBehaviorFactorIdx_CameraOriginalViewHeightDuck] = PhysicBehaviorFactorDefaultValue_CameraOriginalViewHeightDuck;
-		pPhysicBehaviorConfigFirstPersonView->factors[PhysicBehaviorFactorIdx_CameraMappedViewHeightStand] = PhysicBehaviorFactorDefaultValue_CameraMappedViewHeightStand;
-		pPhysicBehaviorConfigFirstPersonView->factors[PhysicBehaviorFactorIdx_CameraMappedViewHeightDuck] = PhysicBehaviorFactorDefaultValue_CameraMappedViewHeightDuck;
-		pPhysicBehaviorConfigFirstPersonView->factors[PhysicBehaviorFactorIdx_CameraNewViewHeightDucking] = PhysicBehaviorFactorDefaultValue_CameraNewViewHeightDucking;
+		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraSyncViewOrigin] = PhysicBehaviorFactorDefaultValue_CameraSyncViewOrigin;
+		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraSyncViewAngles] = 0;
+		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraUseSimOrigin] = 0;
+		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraOriginalViewHeightStand] = PhysicBehaviorFactorDefaultValue_CameraOriginalViewHeightStand;
+		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraOriginalViewHeightDuck] = PhysicBehaviorFactorDefaultValue_CameraOriginalViewHeightDuck;
+		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraMappedViewHeightStand] = PhysicBehaviorFactorDefaultValue_CameraMappedViewHeightStand;
+		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraMappedViewHeightDuck] = PhysicBehaviorFactorDefaultValue_CameraMappedViewHeightDuck;
+		pPhysicBehaviorConfigThirdPersonView->factors[PhysicBehaviorFactorIdx_CameraNewViewHeightDucking] = PhysicBehaviorFactorDefaultValue_CameraNewViewHeightDucking;
 
 		ClientPhysicManager()->AddPhysicConfig(pPhysicBehaviorConfigThirdPersonView->configId, pPhysicBehaviorConfigThirdPersonView);
 
@@ -2960,9 +2987,21 @@ static bool ParseLegacyWaterControl(CClientRagdollObjectConfig* pRagdollConfig, 
 
 		auto pSimpleBuoyancyBehavior = std::make_shared<CClientPhysicBehaviorConfig>();
 
-		pSimpleBuoyancyBehavior->name = std::format("SimpleBuoyancy|{}", rigidbody);
+		// A rigid body can have several detection points; names must stay unique for saving.
+		auto existingPointCount = std::count_if(pRagdollConfig->PhysicBehaviorConfigs.begin(), pRagdollConfig->PhysicBehaviorConfigs.end(), [&rigidbody](const std::shared_ptr<CClientPhysicBehaviorConfig>& p) {
+			return p->type == PhysicBehavior_SimpleBuoyancy && p->rigidbodyA == rigidbody;
+		});
+
+		if (existingPointCount > 0)
+			pSimpleBuoyancyBehavior->name = std::format("SimpleBuoyancy|{}|{}", rigidbody, existingPointCount);
+		else
+			pSimpleBuoyancyBehavior->name = std::format("SimpleBuoyancy|{}", rigidbody);
+
 		pSimpleBuoyancyBehavior->type = PhysicBehavior_SimpleBuoyancy;
 		pSimpleBuoyancyBehavior->rigidbodyA = rigidbody;
+		pSimpleBuoyancyBehavior->origin[0] = offsetX;
+		pSimpleBuoyancyBehavior->origin[1] = offsetY;
+		pSimpleBuoyancyBehavior->origin[2] = offsetZ;
 		pSimpleBuoyancyBehavior->factors[PhysicBehaviorFactorIdx_SimpleBuoyancyMagnitude] = factor0;
 		pSimpleBuoyancyBehavior->factors[PhysicBehaviorFactorIdx_SimpleBuoyancyLinearDamping] = factor1;
 		pSimpleBuoyancyBehavior->factors[PhysicBehaviorFactorIdx_SimpleBuoyancyAngularDamping] = factor2;
@@ -3248,7 +3287,7 @@ bool CBasePhysicManager::SavePhysicObjectConfigForModel(model_t* mod)
 
 bool CBasePhysicManager::SavePhysicObjectConfigForModelIndex(int modelindex)
 {
-	if (modelindex >= 0 && modelindex < EngineGetNumKnownModel())
+	if (modelindex < 0 || modelindex >= (int)m_physicObjectConfigs.size())
 	{
 		g_pMetaHookAPI->SysError("SavePhysicObjectConfigForModelIndex: Invalid model index %d!\n", modelindex);
 		return false;
@@ -4881,8 +4920,9 @@ public:
 
 		auto hFileHandle = FILESYSTEM_ANY_OPEN(filename.c_str(), "rb");
 
+		// Exceptions must not unwind into the engine; callers check IsOpened instead.
 		if (!hFileHandle) {
-			throw std::runtime_error("Failed to open file: " + filename);
+			return;
 		}
 
 		size_t fileSize = FILESYSTEM_ANY_SIZE(hFileHandle);
@@ -4892,15 +4932,25 @@ public:
 		FILESYSTEM_ANY_CLOSE(hFileHandle);
 
 		setg(buffer_.data(), buffer_.data(), buffer_.data() + buffer_.size());
+		opened_ = true;
+	}
+
+	bool IsOpened() const {
+		return opened_;
 	}
 
 private:
 	std::vector<char> buffer_;
+	bool opened_{};
 };
 
 class CFileSystemStream : public std::istream {
 public:
 	CFileSystemStream(const std::string& filename) : std::istream(&fileStreamBuffer_), fileStreamBuffer_(filename) {}
+
+	bool IsOpened() const {
+		return fileStreamBuffer_.IsOpened();
+	}
 
 private:
 	CFileStreamBuffer fileStreamBuffer_;
@@ -4914,6 +4964,11 @@ bool CBasePhysicManager::LoadObjToPhysicArrays(const std::string& resourcePath, 
 	std::string warn, err;
 
 	CFileSystemStream fileStream(resourcePath);
+
+	if (!fileStream.IsOpened()) {
+		gEngfuncs.Con_DPrintf("LoadObjToPhysicArrays: Failed to open \"%s\".\n", resourcePath.c_str());
+		return false;
+	}
 
 	bool ret = tinyobj::LoadObj(
 		&attrib,
