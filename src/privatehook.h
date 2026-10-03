@@ -37,10 +37,6 @@ TEMPENTITY* efxapi_R_TempModel(float* pos, float* dir, float* angles, float life
 //moduleName identifies the module owning the symbol and is echoed by the diagnostic.
 PVOID GamedataResolvePtr(PVOID moduleBase, const char* moduleName, const char* symbolName, mh_gamesymbol_kind_t kind, bool required);
 
-//Read a gamedata scalar value for a module. When required, absence is fatal; otherwise 0 is returned.
-//moduleName identifies the module owning the symbol and is echoed by the diagnostic.
-uint32_t GamedataResolveScalar(PVOID moduleBase, const char* moduleName, const char* symbolName, bool required);
-
 void Engine_FillAddress(PVOID engineBase);
 void Engine_InstallHook(void);
 void Engine_UninstallHook(void);

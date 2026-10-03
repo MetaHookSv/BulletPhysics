@@ -22,8 +22,7 @@ that are resolved today, together with the code that consumes them.
 
 ## Resolution contract
 
-- `GamedataResolvePtr` (`src/privatehook.h`) wraps the host call; `GamedataResolveScalar`
-  stays declared for the scalar path but no symbol needs it today. The `required` argument
+- `GamedataResolvePtr` (`src/privatehook.h`) wraps the host call. The `required` argument
   mirrors the manifest exactly: a required symbol that is missing raises
   `Sys_Error("Could not resolve gamedata symbol: <name> (module <module>, <status>)")`, an
   optional one returns `nullptr` and the caller guards for null.
@@ -34,7 +33,7 @@ that are resolved today, together with the code that consumes them.
   MetaHook derives the module CRC-64/XZ from the on-disk file and returns
   `moduleBase + rva`; no RVA remapping is involved.
 - `src/privatehook.cpp` asserts `METAHOOK_API_VERSION >= 112`: the gamedata resolution
-  surface (FUNCTION / GLOBAL / VIRTUAL_FUNCTION / scalar) is a hard host requirement.
+  surface (FUNCTION / GLOBAL / VIRTUAL_FUNCTION) is a hard host requirement.
 - Missing symbols surface either as a gamedata validator failure at build/publish time
   (`scripts/validate-gamedata.py` BulletPhysics consumer gate) or as the `Sys_Error` above
   at load — never as a silent skip.

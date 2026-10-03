@@ -9,7 +9,7 @@ barnacle/gargantua interactions and a in-game physics configuration editor.
 ## Quick start
 
 Download `BulletPhysics-windows-x86.7z` from
-[GitHub Releases](https://github.com/MetaHookSv/BulletPhysics/releases) (built on `v*` tag pushes).
+[GitHub Releases](https://github.com/MetaHookSv/BulletPhysics/releases).
 Merge both `svencoop/` and `svencoop_downloads/` into the Sven Co-op installation.
 Enable `BulletPhysics.dll` in MetaHook's `metahook/configs/plugins.lst` and launch through MetaHook.
 
@@ -18,12 +18,14 @@ their corresponding player models separately.
 
 ## Compatibility
 
-Windows x86 and OpenGL, with MetaHook API 115 or later for the default pinned SDK build. The packaged gamedata
-covers 17 identities, including Sven Co-op 10257 and 8948. The optional client
-view-entity slot exists only in 10257; 8948 retains the normal guarded path.
-Six legacy Half-Life identities only publish engine data, so they cannot satisfy
-the required client symbols. See [Installation](docs/en/installation.md).
-Catalog coverage and simulated regression tests do not establish real-game compatibility.
+|        Engine               |      |
+|        ----                 | ---- |
+| GoldSrc_blob   (3248~4554)  | √    |
+| GoldSrc_legacy (4554~6153)  | √    |
+| GoldSrc_new    (8684 ~)     | √    |
+| SvEngine       (8832 ~)     | √    |
+| GoldSrc_HL25   (>= 9884)    | √    |
+| GoldSrc_CoF    (5936)       | √    |
 
 ## Documentation
 

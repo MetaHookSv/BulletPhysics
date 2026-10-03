@@ -71,11 +71,6 @@ NUMBERED_PATCH_SETS = (
     "Mod_LoadModel_to_FS_Open_callsite",
 )
 
-# scalar -> owning module, required for every declared engine family. Scalars
-# are plain uint32 values consumed verbatim (no image base, no dereference).
-# No plugin currently consumes a scalar symbol; the gate is kept for the next one.
-REQUIRED_SCALARS = {}
-
 # BulletPhysics consumer gate. Engine-side private symbols are required for
 # every declared engine family; client-side symbols only for game versions
 # whose snapshot publishes a client module. The six engine-only builds
@@ -675,15 +670,6 @@ def validate_required(symbols, family, game_version):
             if rec.get("kind") != "patch":
                 errors.append(f"'{game_version}' ({family}): '{name}' must be a patch record")
             index += 1
-
-    for sym, module in REQUIRED_SCALARS.items():
-        rec = symbols.get((module, sym))
-        if not isinstance(rec, dict):
-            errors.append(f"'{game_version}' ({family}): missing required scalar '{sym}'")
-        elif rec.get("kind") != "scalar":
-            errors.append(f"'{game_version}' ({family}): '{sym}' must be a scalar record")
-        elif rec.get("module") != module:
-            errors.append(f"'{game_version}' ({family}): '{sym}' must belong to module '{module}'")
 
     # BulletPhysics engine-side consumer gate.
     for sym in BULLETPHYSICS_ENGINE_FUNCTIONS:

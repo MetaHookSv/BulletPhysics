@@ -118,36 +118,6 @@ typedef struct skybox_s
 #include <entity_state.h>
 #include <weaponinfo.h>
 
-typedef struct
-{
-	int num_entities;
-	unsigned char flags[32];
-	entity_state_t *entities;
-}
-packet_entities_t;
-
-typedef struct
-{
-	double receivedtime;
-	double latency;
-	qboolean invalid;
-	qboolean choked;
-	entity_state_t playerstate[MAX_CLIENTS];
-	double time;
-	clientdata_t clientdata;
-	weapon_data_t weapondata[64];
-	packet_entities_t packet_entities;
-	unsigned short clientbytes;
-	unsigned short playerinfobytes;
-	unsigned short packetentitybytes;
-	unsigned short tentitybytes;
-	unsigned short soundbytes;
-	unsigned short eventbytes;
-	unsigned short usrbytes;
-	unsigned short voicebytes;
-	unsigned short msgbytes;
-}frame_t;
-
 #define TEX_TYPE_NONE	0
 #define TEX_TYPE_ALPHA	1
 #define TEX_TYPE_LUM	2

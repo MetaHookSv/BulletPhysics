@@ -10,7 +10,7 @@
 #include "ClientEntityManager.h"
 #include "Viewport.h"
 
-static_assert(METAHOOK_API_VERSION >= 112, "BulletPhysics resolves all game-private symbols from gamedata (FUNCTION/GLOBAL/VIRTUAL_FUNCTION/scalar) and requires MetaHook API 112");
+static_assert(METAHOOK_API_VERSION >= 112, "BulletPhysics resolves all game-private symbols from gamedata (FUNCTION/GLOBAL/VIRTUAL_FUNCTION) and requires MetaHook API 112");
 
 private_funcs_t gPrivateFuncs = {0};
 
@@ -57,25 +57,6 @@ PVOID GamedataResolvePtr(PVOID moduleBase, const char* moduleName, const char* s
 	}
 
 	return address;
-}
-
-uint32_t GamedataResolveScalar(PVOID moduleBase, const char* moduleName, const char* symbolName, bool required)
-{
-	uint32_t value = 0;
-	mh_gamesymbol_status_t status = g_pMetaHookAPI->QueryGameSymbolScalar(moduleBase, symbolName, &value);
-
-	if (status != MH_GAMESYMBOL_OK)
-	{
-		if (required)
-		{
-			Sys_Error("Could not resolve gamedata scalar: %s (module %s, %s)",
-				symbolName, moduleName, g_pMetaHookAPI->GetGameSymbolStatusString(status));
-		}
-
-		return 0;
-	}
-
-	return value;
 }
 
 void Engine_FillAddress(PVOID engineBase)
