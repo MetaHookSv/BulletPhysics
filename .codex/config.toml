@@ -1,0 +1,9 @@
+# Match the standalone workspace's approval and sandbox settings.
+approval_policy = "never"
+sandbox_mode    = "workspace-write"
+
+[mcp_servers.basic-memory]
+command = "uvx"
+args = ["basic-memory", "mcp", "--project", "bulletphysics"]
+startup_timeout_sec = 120
+tool_timeout_sec = 300

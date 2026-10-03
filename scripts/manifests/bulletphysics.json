@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "name": "bulletphysics",
+  "indexUrl": "https://hlnd2t.github.io/GoldSrc_VibeSignatures/gamesymbols/index.json",
+  "gameVersions": [
+    "cof-5936", "cstrike-10210", "cstrike-8684", "czero-10210", "czero-8684",
+    "czeror-10210", "czeror-8684", "hl-10210", "hl-3248", "hl-3266",
+    "hl-3329", "hl-3647", "hl-4554", "hl-6153", "hl-8684",
+    "svencoop-10257", "svencoop-8948"
+  ],
+  "symbols": {
+    "client": {
+      "g_iUser1": "global",
+      "g_iUser2": "global"
+    }
+  },
+  "symbolExemptions": {
+    "g_iUser1": ["hl-3248", "hl-3266", "hl-3329", "hl-3647", "hl-4554", "hl-6153"],
+    "g_iUser2": ["hl-3248", "hl-3266", "hl-3329", "hl-3647", "hl-4554", "hl-6153"]
+  },
+  "optionalSymbols": {
+    "client": {
+      "GameStudioRenderer_StudioDrawModel": "virtualFunction",
+      "GameStudioRenderer_StudioDrawPlayer": "virtualFunction",
+      "GameStudioRenderer_StudioSetupBones": "virtualFunction"
+    }
+  },
+  "conditionalGroups": [
+    {
+      "when": [
+        "cof-5936", "hl-10210", "hl-3248", "hl-3266", "hl-3329", "hl-3647",
+        "hl-4554", "hl-6153", "hl-8684", "svencoop-10257", "svencoop-8948"
+      ],
+      "symbols": {
+        "engine": {
+          "R_NewMap": "function", "R_RenderView": "function", "V_RenderView": "function",
+          "R_CullBox": "function", "R_StudioDrawModel": "function",
+          "R_StudioDrawPlayer": "function", "R_StudioSetupBones": "function",
+          "cl_max_edicts": "global", "cl_entities": "global", "gTempEnts": "global",
+          "cl_viewentity": "global", "mod_known": "global", "mod_numknown": "global",
+          "cl_frames": "global", "cl_parsecount": "global", "cl_numvisedicts": "global",
+          "cl_visedicts": "global", "r_worldentity": "global", "cl_worldmodel": "global",
+          "currententity": "global", "pstudiohdr": "global", "r_origin": "global",
+          "size_of_frame": "scalar"
+        }
+      }
+    },
+    {
+      "when": ["svencoop-10257", "svencoop-8948"],
+      "symbols": {
+        "engine": {"allow_cheats": "global"},
+        "client": {"g_bRenderingPortals_SCClient": "global", "g_pitchdrift": "global"}
+      }
+    },
+    {
+      "when": ["svencoop-10257"],
+      "symbols": {"client": {"g_ViewEntityIndex_SCClient": "global"}}
+    },
+    {
+      "when": ["cstrike-8684", "cstrike-10210", "czero-8684", "czero-10210"],
+      "symbols": {"client": {"g_PlayerExtraInfo": "global"}}
+    },
+    {
+      "when": ["czeror-8684", "czeror-10210"],
+      "symbols": {"client": {"g_PlayerExtraInfo_CZDS": "global"}}
+    }
+  ]
+}

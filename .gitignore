@@ -1,0 +1,9 @@
+/build/
+/install/
+/thirdparty/cache/
+/.vs/
+*.user
+__pycache__/
+/Debug/
+/Release/
+/x64/
