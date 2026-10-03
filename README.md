@@ -4,7 +4,7 @@
 
 BulletPhysics is a MetaHookSv client physics plugin for GoldSrc/SvEngine games.
 It provides ragdolls, jiggle bones, collision with moving brushes, buoyancy,
-barnacle/gargantua interactions and a physics configuration editor.
+barnacle/gargantua interactions and a in-game physics configuration editor.
 
 ## Quick start
 
@@ -13,8 +13,6 @@ Download `BulletPhysics-windows-x86.7z` from
 Merge both `svencoop/` and `svencoop_downloads/` into the Sven Co-op installation.
 Enable `BulletPhysics.dll` in MetaHook's `metahook/configs/plugins.lst` and launch through MetaHook.
 
-VGUI2Extension supplies the debug/editor UI. Load it before BulletPhysics; when
-Renderer is enabled, keep Renderer before BulletPhysics as in the original plugin list.
 The physics data includes example configurations and collision OBJ files; install
 their corresponding player models separately.
 

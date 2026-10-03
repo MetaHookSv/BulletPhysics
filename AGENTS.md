@@ -6,8 +6,8 @@
   `memory/build_and_verification.md`, `memory/PrivateSymbols.md` and `memory/CodeStyles.md`.
 - Basic Memory is configured for project `bulletphysics`. Use MCP writes only when
   that project resolves to this repository's `memory/`; otherwise use local notes.
-- Migrated notes use the `bulletphysics/` permalink prefix. PrivateSymbols retains
-  explicitly historical scan records; its current gamedata inventory takes precedence.
+- Migrated notes use the `bulletphysics/` permalink prefix. PrivateSymbols lists only the
+  gamedata symbols resolved today, mirroring `scripts/manifests/bulletphysics.json`.
 - Build: `CMakeLists.txt`, `cmake/Sources.cmake`, `cmake/Dependencies.cmake`,
   `cmake/VCLTL.cmake`, `scripts/build-BulletPhysics-x86-{Debug,Release}.bat`.
 - Plugin: `src/plugins.cpp`, `src/privatehook.cpp`, `src/exportfuncs.cpp`,

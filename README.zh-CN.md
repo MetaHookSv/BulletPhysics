@@ -3,7 +3,7 @@
 [English](README.md)
 
 BulletPhysics 是 MetaHookSv 的 GoldSrc/SvEngine 客户端物理插件，提供布娃娃、
-晃动骨骼、移动固体碰撞、水浮力、藤壶/喷火怪交互以及物理配置编辑器。
+晃动骨骼、移动固体碰撞、水浮力、藤壶/喷火怪交互以及游戏内的物理配置编辑器。
 
 ## 快速开始
 
@@ -12,8 +12,6 @@ BulletPhysics 是 MetaHookSv 的 GoldSrc/SvEngine 客户端物理插件，提供
 `svencoop/` 和 `svencoop_downloads/` 合并到 Sven Co-op 安装目录，在 MetaHook 的
 `metahook/configs/plugins.lst` 启用 `BulletPhysics.dll`，通过 MetaHook 启动游戏。
 
-VGUI2Extension 提供调试/编辑 UI，应在 BulletPhysics 之前加载。使用 Renderer 时，
-保持原插件列表中的 Renderer 在 BulletPhysics 之前的顺序。
 物理数据包含示例配置和碰撞 OBJ；对应的玩家模型需另行安装。
 
 ## 兼容性
