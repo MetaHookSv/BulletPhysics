@@ -69,7 +69,7 @@ target_include_directories(bulletphysics_settings INTERFACE
     "${METAHOOK_SOURCE_PATH}/include/SourceSDK/vstdlib"
     ${BULLETPHYSICS_GLEW_INCLUDE_DIRS}
     ${BULLETPHYSICS_BULLET3_INCLUDE_DIRS}
-    thirdparty/ScopeExit/include
+    ${BULLETPHYSICS_SCOPEEXIT_INCLUDE_DIRS}
     thirdparty/tinyobjloader
     thirdparty/Chocobo1Hash/src
 )
