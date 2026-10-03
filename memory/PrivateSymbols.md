@@ -179,7 +179,7 @@ flowchart TD
 - `HUD_GetStudioModelInterface` (`exportfuncs.cpp`) calls `EngineStudio_FillAddress` + `EngineStudio_InstallHooks`, then `ClientStudio_FillAddress` + `ClientStudio_InstallHooks`.
 - `HUD_Init` installs the `efxapi_R_TempModel` hook; `Engine_UninstallHook` / `ClientStudio_UninstallHooks` / `EngineStudio_UninstallHooks` restore them.
 
-Related: [[BulletPhysics Plugin Overview]] [[project_overview]] [[build_and_verification]]. The disassembly and VGUI2Extension records referenced by the source note remain in the original MetaHookSv knowledge base.
+Related: [[project_overview]] [[build_and_verification]]. The disassembly and VGUI2Extension records referenced by the source note remain in the original MetaHookSv knowledge base.
 
 
 ## gamedata inventory and consumer semantics (2026-09-12, issue #865)

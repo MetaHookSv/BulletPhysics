@@ -2,7 +2,7 @@
 
 ## Knowledge and source entry points
 
-- Start with `memory/project_overview.md`, `memory/BulletPhysics.md`,
+- Start with `memory/project_overview.md`,
   `memory/build_and_verification.md`, `memory/PrivateSymbols.md` and `memory/CodeStyles.md`.
 - Basic Memory is configured for project `bulletphysics`. Use MCP writes only when
   that project resolves to this repository's `memory/`; otherwise use local notes.

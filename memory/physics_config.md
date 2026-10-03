@@ -1,7 +1,7 @@
 ---
-title: bulletphysics_physics_config
+title: physics_config
 type: note
-permalink: bulletphysics/bulletphysics-physics-config
+permalink: bulletphysics/physics-config
 ---
 
 # BulletPhysics Physics Configuration

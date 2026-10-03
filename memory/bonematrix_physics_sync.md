@@ -1,7 +1,7 @@
 ---
-title: bulletphysics_bonematrix_physics_sync
+title: bonematrix_physics_sync
 type: note
-permalink: bulletphysics/bulletphysics-bonematrix-physics-sync
+permalink: bulletphysics/bonematrix-physics-sync
 ---
 
 # BulletPhysics: Bidirectional Synchronization Between Render BoneMatrix and Bullet Rigid Bodies

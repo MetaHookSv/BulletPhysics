@@ -44,8 +44,6 @@ permalink: bulletphysics/code-styles
 - Use anonymous namespaces for internal helpers
 
 ## Comments
-- Use `//` for single-line comments
-- Use `/* */` for multi-line comments
 - Document complex algorithms and non-obvious code
 - Add TODO comments for future work: `// TODO: description`
 
