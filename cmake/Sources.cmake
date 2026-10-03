@@ -1,7 +1,7 @@
 # Explicit compile list from MetaHookSv BulletPhysics.vcxproj at fe80b6d.
 set(BULLETPHYSICS_SOURCES
     "${METAHOOK_SOURCE_PATH}/include/HLSDK/common/interface.cpp"
-    "thirdparty/tinyobjloader/tiny_obj_loader.cc"
+    "${TINYOBJLOADER_SOURCE_PATH}/tiny_obj_loader.cc"
     "${METAHOOK_SOURCE_PATH}/include/SourceSDK/filesystem.cpp"
     "${METAHOOK_SOURCE_PATH}/include/SourceSDK/filesystem_helpers.cpp"
     "${METAHOOK_SOURCE_PATH}/include/SourceSDK/mathlib/3dnow.cpp"

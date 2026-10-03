@@ -4,18 +4,9 @@ set(METAHOOK_SOURCE_PATH "$ENV{METAHOOK_SOURCE_PATH}" CACHE PATH "MetaHook sourc
 set(VGUI2EXTENSION_SOURCE_PATH "$ENV{VGUI2EXTENSION_SOURCE_PATH}" CACHE PATH "VGUI2Extension source tree providing public interface headers; empty fetches the pinned commit")
 set(GLEW_SOURCE_PATH "$ENV{GLEW_SOURCE_PATH}" CACHE PATH "glew-cmake source tree providing libglew_static; empty fetches the pinned commit")
 set(BULLET3_SOURCE_PATH "$ENV{BULLET3_SOURCE_PATH}" CACHE PATH "Bullet3 source tree; empty fetches the pinned fork")
-set(SCOPEEXIT_SOURCE_PATH "$ENV{SCOPEEXIT_SOURCE_PATH}" CACHE PATH "ScopeExit source tree; empty uses the bundled submodule")
-
-function(bulletphysics_init_submodule name)
-    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/thirdparty/${name}/.git")
-        find_package(Git REQUIRED)
-        execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${PROJECT_SOURCE_DIR}"
-            submodule update --init -- "thirdparty/${name}" RESULT_VARIABLE result)
-        if(NOT result EQUAL 0)
-            message(FATAL_ERROR "Cannot initialize thirdparty/${name}: ${result}")
-        endif()
-    endif()
-endfunction()
+set(SCOPEEXIT_SOURCE_PATH "$ENV{SCOPEEXIT_SOURCE_PATH}" CACHE PATH "ScopeExit source tree; empty fetches the pinned commit")
+set(TINYOBJLOADER_SOURCE_PATH "$ENV{TINYOBJLOADER_SOURCE_PATH}" CACHE PATH "tinyobjloader source tree; empty fetches the pinned commit")
+set(CHOCOBO1HASH_SOURCE_PATH "$ENV{CHOCOBO1HASH_SOURCE_PATH}" CACHE PATH "Chocobo1Hash source tree; empty fetches the pinned commit")
 
 function(bulletphysics_fetch_source name url tag out_var)
     include(FetchContent)
@@ -87,20 +78,42 @@ function(bulletphysics_prepare_dependencies)
     endforeach()
     set(BULLETPHYSICS_GLEW_INCLUDE_DIRS "${glew_source}/include" "${glew_source}/include/GL" PARENT_SCOPE)
     set(BULLETPHYSICS_BULLET3_INCLUDE_DIRS "${bullet3_source}/src" PARENT_SCOPE)
-    # ScopeExit may come from a shared external tree (SCOPEEXIT_SOURCE_PATH).
+    # ScopeExit: shared external tree, otherwise fetch the pinned commit.
     if(SCOPEEXIT_SOURCE_PATH)
         get_filename_component(scopeexit_source "${SCOPEEXIT_SOURCE_PATH}" ABSOLUTE BASE_DIR "${PROJECT_SOURCE_DIR}")
-        bulletphysics_validate_source(SCOPEEXIT_SOURCE_PATH "${scopeexit_source}" include/ScopeExit/ScopeExit.h)
     else()
-        set(scopeexit_source "${PROJECT_SOURCE_DIR}/thirdparty/ScopeExit")
+        bulletphysics_fetch_source(bulletphysics_scopeexit
+            "https://github.com/SergiusTheBest/ScopeExit"
+            "bd345da594a4675d04de663d93d00cb81b6678b2" scopeexit_source)
     endif()
+    bulletphysics_validate_source(SCOPEEXIT_SOURCE_PATH "${scopeexit_source}" include/ScopeExit/ScopeExit.h)
     set(BULLETPHYSICS_SCOPEEXIT_INCLUDE_DIRS "${scopeexit_source}/include" PARENT_SCOPE)
     set(SCOPEEXIT_SOURCE_PATH "${scopeexit_source}" PARENT_SCOPE)
-    foreach(module tinyobjloader Chocobo1Hash)
-        bulletphysics_init_submodule(${module})
-    endforeach()
-    bulletphysics_validate_source(tinyobjloader "${PROJECT_SOURCE_DIR}/thirdparty/tinyobjloader" tiny_obj_loader.cc tiny_obj_loader.h)
-    bulletphysics_validate_source(Chocobo1Hash "${PROJECT_SOURCE_DIR}/thirdparty/Chocobo1Hash" src/crc_32.h)
+    message(STATUS "SCOPEEXIT_SOURCE_PATH: ${scopeexit_source}")
+    # tinyobjloader: shared external tree, otherwise fetch the pinned commit.
+    if(TINYOBJLOADER_SOURCE_PATH)
+        get_filename_component(tinyobjloader_source "${TINYOBJLOADER_SOURCE_PATH}" ABSOLUTE BASE_DIR "${PROJECT_SOURCE_DIR}")
+    else()
+        bulletphysics_fetch_source(bulletphysics_tinyobjloader
+            "https://github.com/hzqst/tinyobjloader"
+            "cab4ad7254cbf7eaaafdb73d272f99e92f166df8" tinyobjloader_source)
+    endif()
+    bulletphysics_validate_source(TINYOBJLOADER_SOURCE_PATH "${tinyobjloader_source}" tiny_obj_loader.cc tiny_obj_loader.h)
+    set(BULLETPHYSICS_TINYOBJLOADER_INCLUDE_DIRS "${tinyobjloader_source}" PARENT_SCOPE)
+    set(TINYOBJLOADER_SOURCE_PATH "${tinyobjloader_source}" PARENT_SCOPE)
+    message(STATUS "TINYOBJLOADER_SOURCE_PATH: ${tinyobjloader_source}")
+    # Chocobo1Hash: shared external tree, otherwise fetch the pinned commit.
+    if(CHOCOBO1HASH_SOURCE_PATH)
+        get_filename_component(chocobo1hash_source "${CHOCOBO1HASH_SOURCE_PATH}" ABSOLUTE BASE_DIR "${PROJECT_SOURCE_DIR}")
+    else()
+        bulletphysics_fetch_source(bulletphysics_chocobo1hash
+            "https://github.com/hzqst/Chocobo1Hash"
+            "f455b0e350dce4c3b2415bad5f10484842b0a605" chocobo1hash_source)
+    endif()
+    bulletphysics_validate_source(CHOCOBO1HASH_SOURCE_PATH "${chocobo1hash_source}" src/crc_32.h)
+    set(BULLETPHYSICS_CHOCOBO1HASH_INCLUDE_DIRS "${chocobo1hash_source}/src" PARENT_SCOPE)
+    set(CHOCOBO1HASH_SOURCE_PATH "${chocobo1hash_source}" PARENT_SCOPE)
+    message(STATUS "CHOCOBO1HASH_SOURCE_PATH: ${chocobo1hash_source}")
     include("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/VCLTL.cmake")
     bulletphysics_prepare_vcltl()
 endfunction()
