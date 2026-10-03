@@ -38,10 +38,9 @@
           "R_StudioDrawPlayer": "function", "R_StudioSetupBones": "function",
           "cl_max_edicts": "global", "cl_entities": "global", "gTempEnts": "global",
           "cl_viewentity": "global", "mod_known": "global", "mod_numknown": "global",
-          "cl_frames": "global", "cl_parsecount": "global", "cl_numvisedicts": "global",
+          "cl_parsecount": "global", "cl_numvisedicts": "global",
           "cl_visedicts": "global", "r_worldentity": "global", "cl_worldmodel": "global",
-          "currententity": "global", "pstudiohdr": "global", "r_origin": "global",
-          "size_of_frame": "scalar"
+          "currententity": "global", "pstudiohdr": "global", "r_origin": "global"
         }
       }
     },

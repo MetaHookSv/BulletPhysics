@@ -15,18 +15,18 @@ tags:
 
 Every engine/client private symbol resolves through the host gamedata contract:
 `g_pMetaHookAPI->ResolveGameSymbol(moduleBase, name, kind, &address)` for
-`FUNCTION` / `GLOBAL` / `VIRTUAL_FUNCTION`, and `QueryGameSymbolScalar` for
-`size_of_frame`. There is no signature scan, no Capstone dependency, no mirror module
-image and no scan fallback. The authoritative consumer contract is
-`scripts/manifests/bulletphysics.json`; this note lists only the symbols that are
-resolved today, together with the code that consumes them.
+`FUNCTION` / `GLOBAL` / `VIRTUAL_FUNCTION`. There is no signature scan, no Capstone
+dependency, no mirror module image and no scan fallback. The authoritative consumer
+contract is `scripts/manifests/bulletphysics.json`; this note lists only the symbols
+that are resolved today, together with the code that consumes them.
 
 ## Resolution contract
 
-- `GamedataResolvePtr` / `GamedataResolveScalar` (`src/privatehook.h`) wrap the two host
-  calls. The `required` argument mirrors the manifest exactly: a required symbol that is
-  missing raises `Sys_Error("Could not resolve gamedata symbol: <name> (module <module>,
-  <status>)")`, an optional one returns `nullptr` / `0` and the caller guards for null.
+- `GamedataResolvePtr` (`src/privatehook.h`) wraps the host call; `GamedataResolveScalar`
+  stays declared for the scalar path but no symbol needs it today. The `required` argument
+  mirrors the manifest exactly: a required symbol that is missing raises
+  `Sys_Error("Could not resolve gamedata symbol: <name> (module <module>, <status>)")`, an
+  optional one returns `nullptr` and the caller guards for null.
 - Resolution is driven from four entry points, all passing the real module base:
   `Engine_FillAddress(g_EngineDLLInfo.ImageBase)` and
   `Client_FillAddress(g_ClientDLLInfo.ImageBase)` from `LoadEngine` / `LoadClient`, plus
@@ -64,8 +64,6 @@ resolved today, together with the code that consumes them.
 | `currententity` | global | `cl_entity_t** currententity` (`*ptr`) | required | save/set/restore around engine Studio calls: `BasePhysicManager.cpp`, `ClientEntityManager.cpp`, `exportfuncs.cpp` |
 | `pstudiohdr` | global | `studiohdr_t** pstudiohdr` (`*ptr`) | required | `exportfuncs.cpp` (`StudioSetupBones_Template`, `studioapi_StudioCheckBBox`) |
 | `r_origin` | global | `float* r_origin` | required | `EngineGetRendererViewOrigin()` -> `PhysicDebugGUI.cpp` (debug picking/tracing) |
-| `cl_frames` | global | `void* cl_frames` (frame ring base) | required | **no consumer** — see "Resolved but not consumed" |
-| `size_of_frame` | scalar | `int size_of_frame` | required | **no consumer** — see "Resolved but not consumed" |
 | `allow_cheats` | global | `int* allow_cheats` (`*ptr`) | required, **SvEngine only** | `AllowCheats()` -> `exportfuncs.cpp`, `PhysicDebugGUI.cpp`; other engines leave the pointer null and use the `sv_cheats` cvar |
 
 `allow_cheats` is the only engine symbol resolved behind a conditional: it is requested
@@ -126,20 +124,6 @@ as anchors or direct calls, not private symbols.
 
 `Engine_UninstallHook` restores the two engine render hooks; `ClientStudio_UninstallHooks`
 and `EngineStudio_UninstallHooks` restore the Studio hooks.
-
-## Resolved but not consumed
-
-Two engine symbols are still resolved with `required=true` and still present in the
-manifest, but no code reads them:
-
-- `cl_frames` — the former `R_GetPlayerState` consumer was replaced by the public
-  `IEngineStudio.GetPlayerState(playerIndex)` call (`src/exportfuncs.cpp`). The `frame_t`
-  struct in `src/enginedef.h` is now unused as well.
-- `size_of_frame` — was only the `cl_frames` stride; nothing else reads it.
-
-Dropping them from `src/privatehook.cpp` and from `scripts/manifests/bulletphysics.json`
-would tighten the contract, but that is a gamedata/manifest change and needs to be made
-deliberately on both sides together.
 
 ## Gating and layout assumptions
 

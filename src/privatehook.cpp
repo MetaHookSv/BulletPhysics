@@ -16,8 +16,6 @@ private_funcs_t gPrivateFuncs = {0};
 
 studiohdr_t** pstudiohdr = NULL;
 int* cl_parsecount = NULL;
-void* cl_frames = NULL;
-int size_of_frame = 0;
 int* cl_viewentity = NULL;
 cl_entity_t** currententity = NULL;
 void* mod_known = NULL;
@@ -107,7 +105,6 @@ void Engine_FillAddress(PVOID engineBase)
 	cl_viewentity = (decltype(cl_viewentity))GamedataResolvePtr(engineBase, "engine", "cl_viewentity", MH_GAMESYMBOL_KIND_GLOBAL, true);
 	mod_known = (decltype(mod_known))GamedataResolvePtr(engineBase, "engine", "mod_known", MH_GAMESYMBOL_KIND_GLOBAL, true);
 	mod_numknown = (decltype(mod_numknown))GamedataResolvePtr(engineBase, "engine", "mod_numknown", MH_GAMESYMBOL_KIND_GLOBAL, true);
-	cl_frames = (decltype(cl_frames))GamedataResolvePtr(engineBase, "engine", "cl_frames", MH_GAMESYMBOL_KIND_GLOBAL, true);
 	cl_parsecount = (decltype(cl_parsecount))GamedataResolvePtr(engineBase, "engine", "cl_parsecount", MH_GAMESYMBOL_KIND_GLOBAL, true);
 	cl_numvisedicts = (decltype(cl_numvisedicts))GamedataResolvePtr(engineBase, "engine", "cl_numvisedicts", MH_GAMESYMBOL_KIND_GLOBAL, true);
 	cl_visedicts = (decltype(cl_visedicts))GamedataResolvePtr(engineBase, "engine", "cl_visedicts", MH_GAMESYMBOL_KIND_GLOBAL, true);
@@ -124,9 +121,6 @@ void Engine_FillAddress(PVOID engineBase)
 		allow_cheats = (decltype(allow_cheats))GamedataResolvePtr(engineBase, "engine", "allow_cheats", MH_GAMESYMBOL_KIND_GLOBAL, true);
 	else
 		allow_cheats = nullptr;
-
-	//frame_t stride: a plain uint32 value for the matched engine binary.
-	size_of_frame = (int)GamedataResolveScalar(engineBase, "engine", "size_of_frame", true);
 }
 
 void Client_FillAddress(PVOID clientBase)

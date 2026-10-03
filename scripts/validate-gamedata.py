@@ -73,9 +73,8 @@ NUMBERED_PATCH_SETS = (
 
 # scalar -> owning module, required for every declared engine family. Scalars
 # are plain uint32 values consumed verbatim (no image base, no dereference).
-REQUIRED_SCALARS = {
-    "size_of_frame": "engine",
-}
+# No plugin currently consumes a scalar symbol; the gate is kept for the next one.
+REQUIRED_SCALARS = {}
 
 # BulletPhysics consumer gate. Engine-side private symbols are required for
 # every declared engine family; client-side symbols only for game versions
@@ -98,7 +97,6 @@ BULLETPHYSICS_ENGINE_GLOBALS = (
     "cl_viewentity",
     "mod_known",
     "mod_numknown",
-    "cl_frames",
     "cl_parsecount",
     "cl_numvisedicts",
     "cl_visedicts",

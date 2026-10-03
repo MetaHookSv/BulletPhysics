@@ -56,8 +56,6 @@ extern float(*pbonetransform)[128][3][4];
 extern float(*plighttransform)[128][3][4];
 
 extern int *cl_parsecount;
-extern void *cl_frames;
-extern int size_of_frame;
 extern int *cl_viewentity;
 extern cl_entity_t **currententity;
 extern void *mod_known;
