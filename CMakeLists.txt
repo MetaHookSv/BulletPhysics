@@ -97,7 +97,7 @@ target_link_options(BulletPhysics PRIVATE /DEBUG
     $<$<CONFIG:Debug>:/INCREMENTAL>
     $<$<CONFIG:Release>:/INCREMENTAL:NO;/OPT:REF;/OPT:ICF;/LARGEADDRESSAWARE>)
 # Bullet's CMake project sets a global debug postfix; the plugin keeps its loader name.
-set_target_properties(BulletPhysics PROPERTIES DEBUG_POSTFIX "" INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE FOLDER "Plugins")
+set_target_properties(BulletPhysics PROPERTIES DEBUG_POSTFIX "" INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE FOLDER "MetaHookPlugins")
 
 install(TARGETS BulletPhysics RUNTIME DESTINATION svencoop/metahook/plugins)
 install(FILES "$<TARGET_PDB_FILE:BulletPhysics>" DESTINATION svencoop/metahook/plugins)
