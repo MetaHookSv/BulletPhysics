@@ -29,6 +29,8 @@ endif()
 if(NOT TARGET libglew_static)
     message(FATAL_ERROR "GLEW_SOURCE_PATH must provide the libglew_static CMake target.")
 endif()
+# Group the vendored GLEW library under one IDE filter.
+set_target_properties(libglew_static PROPERTIES FOLDER "glew")
 
 # Keep the fork's single-precision static libraries and suppress its SDK install.
 # BUILD_SHARED_LIBS stays a directory-scoped variable (CMP0077 lets the fork's option()
