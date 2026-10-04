@@ -22,16 +22,22 @@ set(USE_VCLTL OFF CACHE BOOL "Separate vendor VC-LTL integration" FORCE)
 set(glew-cmake_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 set(glew-cmake_BUILD_STATIC ON CACHE BOOL "" FORCE)
 set(ONLY_LIBS ON CACHE BOOL "" FORCE)
-add_subdirectory("${GLEW_SOURCE_PATH}" "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/GLEW" EXCLUDE_FROM_ALL)
+# An aggregating parent build may already provide libglew_static from a sibling component.
+if(NOT TARGET libglew_static)
+    add_subdirectory("${GLEW_SOURCE_PATH}" "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/GLEW" EXCLUDE_FROM_ALL)
+endif()
 if(NOT TARGET libglew_static)
     message(FATAL_ERROR "GLEW_SOURCE_PATH must provide the libglew_static CMake target.")
 endif()
 
 # Keep the fork's single-precision static libraries and suppress its SDK install.
+# BUILD_SHARED_LIBS stays a directory-scoped variable (CMP0077 lets the fork's option()
+# honor it) so it does not leak into the cache of an aggregating parent build.
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 set(CMAKE_POLICY_DEFAULT_CMP0091 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 set(BUILD_BULLET3 ON CACHE BOOL "" FORCE)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF)
 set(USE_DOUBLE_PRECISION OFF CACHE BOOL "" FORCE)
 set(USE_MSVC_RUNTIME_LIBRARY_DLL OFF CACHE BOOL "" FORCE)
 foreach(option BUILD_EXTRAS BUILD_BULLET2_DEMOS BUILD_OPENGL3_DEMOS BUILD_CPU_DEMOS
@@ -97,13 +103,13 @@ install(DIRECTORY assets/svencoop/bulletphysics DESTINATION svencoop)
 install(DIRECTORY assets/svencoop_downloads DESTINATION .)
 
 option(BULLETPHYSICS_SYNC_GAMEDATA "Download and prune BulletPhysics's gamedata catalog before building" ON)
-set(BULLETPHYSICS_GAMEDATA_DIR "${CMAKE_BINARY_DIR}/assets/svencoop/metahook/gamedata/bulletphysics" CACHE PATH "BulletPhysics gamedata catalog directory")
+set(BULLETPHYSICS_GAMEDATA_DIR "${PROJECT_BINARY_DIR}/assets/svencoop/metahook/gamedata/bulletphysics" CACHE PATH "BulletPhysics gamedata catalog directory")
 if(BULLETPHYSICS_SYNC_GAMEDATA)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_custom_target(BulletPhysicsGameData
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/sync-gamedata.py"
             --manifest "${CMAKE_CURRENT_SOURCE_DIR}/scripts/manifests/bulletphysics.json"
-            --target-dir "${BULLETPHYSICS_GAMEDATA_DIR}" --temp-root "${CMAKE_BINARY_DIR}/gamedata-sync"
+            --target-dir "${BULLETPHYSICS_GAMEDATA_DIR}" --temp-root "${PROJECT_BINARY_DIR}/gamedata-sync"
         COMMENT "Synchronizing and validating BulletPhysics gamedata"
         VERBATIM
     )
