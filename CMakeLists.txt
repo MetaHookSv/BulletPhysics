@@ -150,3 +150,12 @@ if(BULLETPHYSICS_BUILD_TESTS)
     add_test(NAME shipped_physic_assets_tests COMMAND shipped_physic_assets_tests "${CMAKE_CURRENT_SOURCE_DIR}/assets/svencoop_downloads")
     add_test(NAME bullet_backend_tests COMMAND bullet_backend_tests)
 endif()
+
+# The aggregate solution owns its single LaunchGame target.
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    option(METAHOOKSV_ENABLE_LAUNCH_GAME "Add the Visual Studio build/deploy/debug target" OFF)
+    if(METAHOOKSV_ENABLE_LAUNCH_GAME)
+        include(cmake/LaunchGame.cmake)
+        metahooksv_add_launch_game()
+    endif()
+endif()
