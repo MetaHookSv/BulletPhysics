@@ -51,6 +51,8 @@ foreach(library IN LISTS bullet_libraries)
     if(NOT TARGET ${library})
         message(FATAL_ERROR "BULLET3_SOURCE_PATH must provide the ${library} CMake target.")
     endif()
+    # Group the vendored Bullet3 libraries under one IDE filter.
+    set_target_properties(${library} PROPERTIES FOLDER "BulletEngine")
 endforeach()
 
 add_library(bulletphysics_settings INTERFACE)
@@ -95,7 +97,7 @@ target_link_options(BulletPhysics PRIVATE /DEBUG
     $<$<CONFIG:Debug>:/INCREMENTAL>
     $<$<CONFIG:Release>:/INCREMENTAL:NO;/OPT:REF;/OPT:ICF;/LARGEADDRESSAWARE>)
 # Bullet's CMake project sets a global debug postfix; the plugin keeps its loader name.
-set_target_properties(BulletPhysics PROPERTIES DEBUG_POSTFIX "" INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+set_target_properties(BulletPhysics PROPERTIES DEBUG_POSTFIX "" INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE FOLDER "Plugins")
 
 install(TARGETS BulletPhysics RUNTIME DESTINATION svencoop/metahook/plugins)
 install(FILES "$<TARGET_PDB_FILE:BulletPhysics>" DESTINATION svencoop/metahook/plugins)
