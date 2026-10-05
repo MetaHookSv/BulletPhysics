@@ -18,12 +18,12 @@ scripts\build-BulletPhysics-x86-Release.bat
 
 ## 依赖
 
-显式路径优先并在下载前校验；空路径获取固定提交。同名环境变量提供首次配置默认值，
-后续使用带引号的 `-DNAME=value` 修改缓存。
+显式路径优先并在下载前校验；空路径获取固定提交，但 MetaHook 跟踪最新 `main`。
+同名环境变量提供首次配置默认值，后续使用带引号的 `-DNAME=value` 修改缓存。
 
-| 参数 | 源码目录要求 | 默认提交 |
+| 参数 | 源码目录要求 | 默认版本 |
 | --- | --- | --- |
-| `METAHOOK_SOURCE_PATH` | MetaHook API、HLSDK/SourceSDK/VGUI 源码与 `IPanel2.h` | `4d23b6fecd79dc949aabc2e145480cd1328d4a35` |
+| `METAHOOK_SOURCE_PATH` | MetaHook API、HLSDK/SourceSDK/VGUI 源码与 `IPanel2.h` | 最新 `main` |
 | `VGUI2EXTENSION_SOURCE_PATH` | `include/Interface` 下的公共接口 | `cd7ef6e3b7fb51d3c98e6d7dadec02dd1fa08c4f` |
 | `GLEW_SOURCE_PATH` | 提供 `libglew_static` 的 glew-cmake | `56ed32d4a929f993f0e6b7f905af9be4d38fda04` |
 | `BULLET3_SOURCE_PATH` | hzqst Bullet3 fork，含 `src/btBulletDynamicsCommon.h` | `1ece383aeb5a148533ad5c0cd829cd10d38117c3` |
@@ -80,4 +80,4 @@ Release 保留断言，不需要游戏 DLL 或 GL context。
 main 的 push/PR/手动 LiveBuild 和 `v*` 标签 Release 共用 Windows x86 action。
 CI 获取 MetaHook/VGUI2Extension 的 main 并记录 SHA，构建 Release、运行 CTest、
 校验安装后的 gamedata，将 `svencoop` 和 `svencoop_downloads` 打包为
-`BulletPhysics-windows-x86.7z` 并执行 `7z t`。本地自动获取的依赖仍使用固定提交。
+`BulletPhysics-windows-x86.7z` 并执行 `7z t`。本地自动获取时，MetaHook 取最新 `main`，其余依赖使用固定提交。

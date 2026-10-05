@@ -23,12 +23,13 @@ Debug and Release are provided. Outputs are `build/x86/<configuration>` and
 ## Dependencies
 
 Explicit paths take precedence and are validated before downloads. Empty source
-paths fetch fixed commits; the same-named environment variables supply defaults
-on first configure. Use quoted `-DNAME=value` arguments to change cached values.
+paths fetch fixed commits except MetaHook, which tracks the latest `main`; the
+same-named environment variables supply defaults on first configure. Use quoted
+`-DNAME=value` arguments to change cached values.
 
-| Parameter | Required source contents | Default commit |
+| Parameter | Required source contents | Default revision |
 | --- | --- | --- |
-| `METAHOOK_SOURCE_PATH` | MetaHook API, HLSDK/SourceSDK/VGUI sources and `IPanel2.h` | `4d23b6fecd79dc949aabc2e145480cd1328d4a35` |
+| `METAHOOK_SOURCE_PATH` | MetaHook API, HLSDK/SourceSDK/VGUI sources and `IPanel2.h` | latest `main` |
 | `VGUI2EXTENSION_SOURCE_PATH` | Public interface headers under `include/Interface` | `cd7ef6e3b7fb51d3c98e6d7dadec02dd1fa08c4f` |
 | `GLEW_SOURCE_PATH` | glew-cmake with `libglew_static` | `56ed32d4a929f993f0e6b7f905af9be4d38fda04` |
 | `BULLET3_SOURCE_PATH` | hzqst Bullet3 fork, including `src/btBulletDynamicsCommon.h` | `1ece383aeb5a148533ad5c0cd829cd10d38117c3` |
@@ -43,7 +44,7 @@ scripts\build-BulletPhysics-x86-Release.bat ^
   "-DBULLET3_SOURCE_PATH=D:/bullet3"
 ```
 
-The symbol APIs require at least API 112. The pinned SDK is API 115, and LoadEngine
+The symbol APIs require at least API 112. The auto-fetched SDK is API 115, and LoadEngine
 requires the host API version used by that build; using a newer SDK can raise that requirement.
 
 External trees are read-only. MetaHook provides SDK code, not a launcher build;
@@ -96,4 +97,5 @@ LiveBuild (`main` push/PR/manual) and Release (`v*` tags) share the Windows x86
 composite action. CI clones the `main` branches of MetaHook and VGUI2Extension,
 records their SHAs, builds Release with tests, runs CTest and validates installed
 gamedata. It archives both `svencoop` and `svencoop_downloads` as
-`BulletPhysics-windows-x86.7z` and runs `7z t`. Local automatic dependencies stay pinned.
+`BulletPhysics-windows-x86.7z` and runs `7z t`. Local automatic dependencies stay pinned,
+except MetaHook which tracks the latest `main`.

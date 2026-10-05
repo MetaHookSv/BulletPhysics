@@ -145,7 +145,7 @@ flowchart TD
 - gamedata: all private symbols resolve through the host MetaHook API; the plugin ships a pruned nested catalog. No Capstone scanning dependency remains.
 - tinyobjloader, ScopeExit, Chocobo1Hash: OBJ collision resources, scope cleanup, and hashing/integrity helpers; pinned submodules.
 - Runtime resources: *_physics.txt/*_ragdoll.txt, BSP brush data, external .obj meshes, assets/svencoop/bulletphysics/*.res and localized text.
-- The plugin only consumes MetaHook public API/HLSDK/SourceSDK/VGUI sources; it does not build the host. VGUI2Extension consumes public interface headers only, with the UI supplied at runtime. When no source path is provided, fixed commits are obtained through FetchContent.
+- The plugin only consumes MetaHook public API/HLSDK/SourceSDK/VGUI sources; it does not build the host. VGUI2Extension consumes public interface headers only, with the UI supplied at runtime. When no source path is provided, FetchContent is used — MetaHook from the latest `main`, the other dependencies at fixed commits.
 - CMakeLists.txt builds Windows MSVC x86 Debug/Release with C++20, static CRT and VC-LTL. cmake/Sources.cmake preserves the 167-item compile list from the source vcxproj. VC-LTL uses the verified 5.3.1 package. SDL, Capstone, and FreeImage are not dependencies of this plugin.
 - The plugin keeps IPluginsV4/CreateInterface and the original calling conventions; the physics interfaces are internal headers with no separate public SDK.
 - Private symbols resolve through the host ResolveGameSymbol; consumption changes must be synced to the manifest. gamedata is pruned to `metahook/gamedata/bulletphysics` and merged by the host with the other catalogs.

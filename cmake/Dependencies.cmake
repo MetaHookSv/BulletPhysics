@@ -48,7 +48,8 @@ function(bulletphysics_prepare_dependencies)
         include(FetchContent)
         FetchContent_Declare(bulletphysics_metahook
             GIT_REPOSITORY https://github.com/MetaHookSv/MetaHook
-            GIT_TAG 4d23b6fecd79dc949aabc2e145480cd1328d4a35
+            # MetaHook is tracked as a branch: always fetch the latest main.
+            GIT_TAG origin/main
             GIT_SUBMODULES ""
             GIT_SUBMODULES_RECURSE FALSE
             SOURCE_SUBDIR include)
