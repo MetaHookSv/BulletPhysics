@@ -3,7 +3,7 @@
   "name": "bulletphysics",
   "indexUrl": "https://hlnd2t.github.io/GoldSrc_VibeSignatures/gamesymbols/index.json",
   "gameVersions": [
-    "cof-5936", "cstrike-10210", "cstrike-8684", "czero-10210", "czero-8684",
+    "cof-5936", "cstrike-10210", "cstrike-3248", "cstrike-3647", "cstrike-8684", "czero-10210", "czero-8684",
     "czeror-10210", "czeror-8684", "hl-10210", "hl-3248", "hl-3266",
     "hl-3329", "hl-3647", "hl-4554", "hl-6153", "hl-8684",
     "svencoop-10257", "svencoop-8948"
@@ -56,7 +56,7 @@
       "symbols": {"client": {"g_ViewEntityIndex_SCClient": "global"}}
     },
     {
-      "when": ["cstrike-8684", "cstrike-10210", "czero-8684", "czero-10210"],
+      "when": ["cstrike-3248", "cstrike-3647", "cstrike-8684", "cstrike-10210", "czero-8684", "czero-10210"],
       "symbols": {"client": {"g_PlayerExtraInfo": "global"}}
     },
     {
