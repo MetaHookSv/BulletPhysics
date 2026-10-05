@@ -46,7 +46,19 @@ foreach(option BUILD_EXTRAS BUILD_BULLET2_DEMOS BUILD_OPENGL3_DEMOS BUILD_CPU_DE
     BUILD_PYBULLET BUILD_UNIT_TESTS USE_GLUT INSTALL_LIBS INSTALL_CMAKE_FILES)
     set(${option} OFF CACHE BOOL "" FORCE)
 endforeach()
+# Bullet caches configuration postfixes globally. Keep them on Bullet's targets,
+# but do not let newly created cache entries change sibling projects' defaults.
+# Cache entries supplied by the caller must remain intact.
+set(_bulletphysics_new_postfix_cache_entries)
+foreach(_config DEBUG MINSIZEREL RELWITHDEBINFO)
+    if(NOT DEFINED CACHE{CMAKE_${_config}_POSTFIX})
+        list(APPEND _bulletphysics_new_postfix_cache_entries CMAKE_${_config}_POSTFIX)
+    endif()
+endforeach()
 add_subdirectory("${BULLET3_SOURCE_PATH}" "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Bullet3" EXCLUDE_FROM_ALL)
+foreach(_postfix IN LISTS _bulletphysics_new_postfix_cache_entries)
+    unset(${_postfix} CACHE)
+endforeach()
 set(bullet_libraries Bullet3Collision Bullet3Common Bullet3Dynamics Bullet3Geometry
     BulletCollision BulletDynamics LinearMath)
 foreach(library IN LISTS bullet_libraries)
