@@ -118,6 +118,28 @@ install(FILES "$<TARGET_PDB_FILE:BulletPhysics>" DESTINATION svencoop/metahook/p
 install(DIRECTORY assets/svencoop/bulletphysics DESTINATION svencoop)
 install(DIRECTORY assets/svencoop_downloads DESTINATION .)
 
+# Optional AVX2 variant installed as BulletPhysics_AVX2.dll. The launcher probes
+# *_AVX2.dll before the baseline name, so publishing this keeps an AVX2-capable
+# installation from loading a stale copy left behind by an older release.
+option(BULLETPHYSICS_BUILD_AVX2 "Also build and install BulletPhysics_AVX2.dll" OFF)
+if(BULLETPHYSICS_BUILD_AVX2)
+    add_library(BulletPhysics_AVX2 SHARED ${BULLETPHYSICS_SOURCES})
+    target_link_libraries(BulletPhysics_AVX2 PRIVATE bulletphysics_settings libglew_static ${bullet_libraries} opengl32)
+    target_compile_definitions(BulletPhysics_AVX2 PRIVATE $<$<CONFIG:Debug>:_DEBUG>)
+    # Release carries /arch:AVX2; Debug keeps the baseline /arch:SSE2 so debugging
+    # is unaffected. The launcher only loads the variant when the CPU reports AVX2.
+    target_compile_options(BulletPhysics_AVX2 PRIVATE /MP /Zi
+        $<$<CONFIG:Debug>:/arch:SSE2> $<$<CONFIG:Release>:/arch:AVX2>)
+    target_link_options(BulletPhysics_AVX2 PRIVATE /DEBUG
+        $<$<CONFIG:Debug>:/INCREMENTAL>
+        $<$<CONFIG:Release>:/INCREMENTAL:NO;/OPT:REF;/OPT:ICF;/LARGEADDRESSAWARE>)
+    set_target_properties(BulletPhysics_AVX2 PROPERTIES
+        OUTPUT_NAME BulletPhysics_AVX2 DEBUG_POSTFIX ""
+        INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE FOLDER "MetaHookPlugins")
+    install(TARGETS BulletPhysics_AVX2 RUNTIME DESTINATION svencoop/metahook/plugins)
+    install(FILES "$<TARGET_PDB_FILE:BulletPhysics_AVX2>" DESTINATION svencoop/metahook/plugins)
+endif()
+
 option(BULLETPHYSICS_SYNC_GAMEDATA "Download and prune BulletPhysics's gamedata catalog before building" ON)
 set(BULLETPHYSICS_GAMEDATA_DIR "${PROJECT_BINARY_DIR}/assets/svencoop/metahook/gamedata/bulletphysics" CACHE PATH "BulletPhysics gamedata catalog directory")
 if(BULLETPHYSICS_SYNC_GAMEDATA)
