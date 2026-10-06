@@ -13,7 +13,9 @@ scripts\build-BulletPhysics-x86-Release.bat
 ```
 
 脚本使用 `Visual Studio 17 2022 -A Win32` 完成配置、构建和安装，支持从仓库外调用，
-失败时返回非零退出码。配置只有 Debug/Release。构建目录为 `build/x86/<配置>`，
+失败时返回非零退出码。脚本只配置普通 Debug/Release；可选开关 `BULLETPHYSICS_BUILD_AVX2`
+会额外增加一个以 `/arch:AVX2` 编译的 Release 目标，安装为 `BulletPhysics_AVX2.dll`
+（加载器会先探测该名字，再回退到 `BulletPhysics.dll`）。构建目录为 `build/x86/<配置>`，
 安装目录为 `install/x86/<配置>`，不会自动部署到游戏。
 
 ## 依赖
