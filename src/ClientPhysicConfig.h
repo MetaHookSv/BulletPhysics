@@ -11,208 +11,208 @@
 class CClientBasePhysicConfig : public IBaseInterface
 {
 public:
-	CClientBasePhysicConfig();
-	~CClientBasePhysicConfig();
+    CClientBasePhysicConfig();
+    ~CClientBasePhysicConfig();
 
-	int configId{};
-	int configType{ PhysicConfigType_None };
-	bool configModified{};
+    int  configId{};
+    int  configType{PhysicConfigType_None};
+    bool configModified{};
 };
 
 class CClientCollisionShapeConfig;
 
 using CClientCollisionShapeConfigSharedPtr = std::shared_ptr<CClientCollisionShapeConfig>;
-using CClientCollisionShapeConfigs = std::vector< CClientCollisionShapeConfigSharedPtr>;
+using CClientCollisionShapeConfigs         = std::vector<CClientCollisionShapeConfigSharedPtr>;
 
 class CClientCollisionShapeConfig : public CClientBasePhysicConfig
 {
 public:
-	CClientCollisionShapeConfig();
+    CClientCollisionShapeConfig();
 
-	int type{ PhysicShape_None };
+    int type{PhysicShape_None};
 
-	int direction{ PhysicShapeDirection_Y };
+    int direction{PhysicShapeDirection_Y};
 
-	vec3_t size{ 0 };
+    vec3_t size{0};
 
-	//for compound shape
-	bool is_child{};
+    //for compound shape
+    bool is_child{};
 
-	//for compound shape
-	vec3_t origin{ 0 };
+    //for compound shape
+    vec3_t origin{0};
 
-	//for compound shape
-	vec3_t angles{ 0 };
+    //for compound shape
+    vec3_t angles{0};
 
-	//TODO for multi sphere
-	//std::vector<vec4_t> multispheres;
+    //TODO for multi sphere
+    //std::vector<vec4_t> multispheres;
 
-	std::string resourcePath;
+    std::string resourcePath;
 
-	CClientCollisionShapeConfigs compoundShapes;
+    CClientCollisionShapeConfigs compoundShapes;
 };
 
 class CClientRigidBodyConfig : public CClientBasePhysicConfig
 {
 public:
-	CClientRigidBodyConfig();
+    CClientRigidBodyConfig();
 
-	std::string name;
+    std::string name;
 
-	int flags{ PhysicRigidBodyFlag_None };
-	int debugDrawLevel{ BULLET_DEFAULT_DEBUG_DRAW_LEVEL };
+    int flags{PhysicRigidBodyFlag_None};
+    int debugDrawLevel{BULLET_DEFAULT_DEBUG_DRAW_LEVEL};
 
-	//For positioning
-	int boneindex{ -1 };
-	vec3_t origin{ 0 };
-	vec3_t angles{ 0 };
+    //For positioning
+    int    boneindex{-1};
+    vec3_t origin{0};
+    vec3_t angles{0};
 
-	//For legacy configs
-	bool isLegacyConfig{ false };
-	int pboneindex{ -1 };
-	float pboneoffset{ 0 };
-	vec3_t forward{ 0, 1, 0 };
+    //For legacy configs
+    bool   isLegacyConfig{false};
+    int    pboneindex{-1};
+    float  pboneoffset{0};
+    vec3_t forward{0, 1, 0};
 
-	float mass{ 1 };
-	float density{ 1 };
-	float linearFriction{ BULLET_DEFAULT_LINEAR_FRICTION };
-	float rollingFriction{ BULLET_DEFAULT_ANGULAR_FRICTION  };
-	float restitution{ BULLET_DEFAULT_RESTITUTION };
-	float ccdRadius{ 0 };
-	float ccdThreshold{ BULLET_DEFAULT_CCD_THRESHOLD };
-	float linearSleepingThreshold{ BULLET_DEFAULT_LINEAR_SLEEPING_THRESHOLD };
-	float angularSleepingThreshold{ BULLET_DEFAULT_ANGULAR_SLEEPING_THRESHOLD };
-	float additionalDampingFactor{ BULLET_DEFAULT_ADDITIONAL_DAMPING_FACTOR };
-	float additionalLinearDampingThresholdSqr{ BULLET_DEFAULT_ADDITIONAL_LINEAR_DAMPING_THRESHOLD_SQR };
-	float additionalAngularDampingThresholdSqr{ BULLET_DEFAULT_ADDITIONAL_ANGULAR_DAMPING_THRESHOLD_SQR };
+    float mass{1};
+    float density{1};
+    float linearFriction{BULLET_DEFAULT_LINEAR_FRICTION};
+    float rollingFriction{BULLET_DEFAULT_ANGULAR_FRICTION};
+    float restitution{BULLET_DEFAULT_RESTITUTION};
+    float ccdRadius{0};
+    float ccdThreshold{BULLET_DEFAULT_CCD_THRESHOLD};
+    float linearSleepingThreshold{BULLET_DEFAULT_LINEAR_SLEEPING_THRESHOLD};
+    float angularSleepingThreshold{BULLET_DEFAULT_ANGULAR_SLEEPING_THRESHOLD};
+    float additionalDampingFactor{BULLET_DEFAULT_ADDITIONAL_DAMPING_FACTOR};
+    float additionalLinearDampingThresholdSqr{BULLET_DEFAULT_ADDITIONAL_LINEAR_DAMPING_THRESHOLD_SQR};
+    float additionalAngularDampingThresholdSqr{BULLET_DEFAULT_ADDITIONAL_ANGULAR_DAMPING_THRESHOLD_SQR};
 
-	//TODO?
-	//vec3_t centerOfMass{ 0 };
+    //TODO?
+    //vec3_t centerOfMass{ 0 };
 
-	CClientCollisionShapeConfigSharedPtr collisionShape;
+    CClientCollisionShapeConfigSharedPtr collisionShape;
 };
 
 class CClientConstraintConfig : public CClientBasePhysicConfig
 {
 public:
-	CClientConstraintConfig();
+    CClientConstraintConfig();
 
-	std::string name;
-	int type{ PhysicConstraint_None };
-	std::string rigidbodyA;
-	std::string rigidbodyB;
-	vec3_t originA{ 0 };
-	vec3_t anglesA{ 0 };
-	vec3_t originB{ 0 };
-	vec3_t anglesB{ 0 };
-	vec3_t forward{ 0, 1, 0 };
+    std::string name;
+    int         type{PhysicConstraint_None};
+    std::string rigidbodyA;
+    std::string rigidbodyB;
+    vec3_t      originA{0};
+    vec3_t      anglesA{0};
+    vec3_t      originB{0};
+    vec3_t      anglesB{0};
+    vec3_t      forward{0, 1, 0};
 
-	bool disableCollision{ true };
-	bool useGlobalJointFromA{ true };
-	bool useLinearReferenceFrameA{ true };
-	bool useLookAtOther{ false };
-	bool useGlobalJointOriginFromOther{ false };
-	bool useRigidBodyDistanceAsLinearLimit{ false };
-	bool useSeperateLocalFrame{ false };
+    bool disableCollision{true};
+    bool useGlobalJointFromA{true};
+    bool useLinearReferenceFrameA{true};
+    bool useLookAtOther{false};
+    bool useGlobalJointOriginFromOther{false};
+    bool useRigidBodyDistanceAsLinearLimit{false};
+    bool useSeperateLocalFrame{false};
 
-	int rotOrder{ PhysicRotOrder_XYZ };
+    int rotOrder{PhysicRotOrder_XYZ};
 
-	int flags{ 0 };
-	int debugDrawLevel{ BULLET_DEFAULT_DEBUG_DRAW_LEVEL };
-	float factors[PhysicConstraintFactorIdx_Maximum]{  };
+    int   flags{0};
+    int   debugDrawLevel{BULLET_DEFAULT_DEBUG_DRAW_LEVEL};
+    float factors[PhysicConstraintFactorIdx_Maximum]{};
 
-	float maxTolerantLinearError{ BULLET_DEFAULT_MAX_TOLERANT_LINEAR_ERROR };
+    float maxTolerantLinearError{BULLET_DEFAULT_MAX_TOLERANT_LINEAR_ERROR};
 
-	//For legacy configs
-	bool isLegacyConfig{ false };
-	int boneindexA{ -1 };
-	int boneindexB{ -1 };
-	vec3_t offsetA{ 0 };
-	vec3_t offsetB{ 0 };
+    //For legacy configs
+    bool   isLegacyConfig{false};
+    int    boneindexA{-1};
+    int    boneindexB{-1};
+    vec3_t offsetA{0};
+    vec3_t offsetB{0};
 };
 
 class CClientPhysicBehaviorConfig : public CClientBasePhysicConfig
 {
 public:
-	CClientPhysicBehaviorConfig();
+    CClientPhysicBehaviorConfig();
 
-	int type{ PhysicBehavior_None };
-	std::string name;
-	std::string rigidbodyA;
-	std::string rigidbodyB;
-	std::string constraint;
-	vec3_t origin{ 0 };
-	vec3_t angles{ 0 };
-	int flags{ 0 };
-	int debugDrawLevel{ BULLET_DEFAULT_DEBUG_DRAW_LEVEL };
-	float factors[PhysicBehaviorFactorIdx_Maximum]{  };
+    int         type{PhysicBehavior_None};
+    std::string name;
+    std::string rigidbodyA;
+    std::string rigidbodyB;
+    std::string constraint;
+    vec3_t      origin{0};
+    vec3_t      angles{0};
+    int         flags{0};
+    int         debugDrawLevel{BULLET_DEFAULT_DEBUG_DRAW_LEVEL};
+    float       factors[PhysicBehaviorFactorIdx_Maximum]{};
 };
 
 class CClientAnimControlConfig : public CClientBasePhysicConfig
 {
 public:
-	CClientAnimControlConfig();
+    CClientAnimControlConfig();
 
-	int sequence{-1};
-	int gaitsequence{-1};
-	float animframe{0};
-	StudioAnimActivityType activityType{ StudioAnimActivityType_Idle };
-	int flags{ };
-	int controller[4]{  };
-	int blending[4]{  };
+    int                    sequence{-1};
+    int                    gaitsequence{-1};
+    float                  animframe{0};
+    StudioAnimActivityType activityType{StudioAnimActivityType_Idle};
+    int                    flags{};
+    int                    controller[4]{};
+    int                    blending[4]{};
 };
 
 class CClientPhysicObjectConfig : public CClientBasePhysicConfig
 {
 public:
-	CClientPhysicObjectConfig();
+    CClientPhysicObjectConfig();
 
-	int type{ PhysicObjectType_None };
-	
-	int flags{}; //runtime flags that used by physic engine
+    int type{PhysicObjectType_None};
 
-	int debugDrawLevel{ BULLET_DEFAULT_DEBUG_DRAW_LEVEL };
+    int flags{}; //runtime flags that used by physic engine
 
-	bool verifyBoneChunk{};
-	bool verifyModelFile{};
-	std::string crc32BoneChunk{};
-	std::string crc32ModelFile{};
+    int debugDrawLevel{BULLET_DEFAULT_DEBUG_DRAW_LEVEL};
 
-	std::vector<std::shared_ptr<CClientRigidBodyConfig>> RigidBodyConfigs;
-	std::vector<std::shared_ptr<CClientConstraintConfig>> ConstraintConfigs;
-	std::vector<std::shared_ptr<CClientPhysicBehaviorConfig>> PhysicBehaviorConfigs;
+    bool        verifyBoneChunk{};
+    bool        verifyModelFile{};
+    std::string crc32BoneChunk{};
+    std::string crc32ModelFile{};
 
-	//Never save to file or load from file
-	std::string modelName;
-	std::string shortName;
+    std::vector<std::shared_ptr<CClientRigidBodyConfig>>      RigidBodyConfigs;
+    std::vector<std::shared_ptr<CClientConstraintConfig>>     ConstraintConfigs;
+    std::vector<std::shared_ptr<CClientPhysicBehaviorConfig>> PhysicBehaviorConfigs;
+
+    //Never save to file or load from file
+    std::string modelName;
+    std::string shortName;
 };
 
 class CClientDynamicObjectConfig : public CClientPhysicObjectConfig
 {
 public:
-	CClientDynamicObjectConfig();
+    CClientDynamicObjectConfig();
 };
 
 class CClientStaticObjectConfig : public CClientPhysicObjectConfig
 {
 public:
-	CClientStaticObjectConfig();
+    CClientStaticObjectConfig();
 };
 
 class CClientRagdollObjectConfig : public CClientPhysicObjectConfig
 {
 public:
-	CClientRagdollObjectConfig();
+    CClientRagdollObjectConfig();
 
-	std::vector<std::shared_ptr<CClientAnimControlConfig>> AnimControlConfigs;
+    std::vector<std::shared_ptr<CClientAnimControlConfig>> AnimControlConfigs;
 };
 
 class CClientPhysicObjectConfigStorage
 {
 public:
-	int state{ PhysicConfigState_NotLoaded };
-	std::string modelname;
-	std::shared_ptr<CClientPhysicObjectConfig> pConfig{};
+    int                                        state{PhysicConfigState_NotLoaded};
+    std::string                                modelname;
+    std::shared_ptr<CClientPhysicObjectConfig> pConfig{};
 };
 
 using CClientPhysicObjectConfigs = std::vector<CClientPhysicObjectConfigStorage>;

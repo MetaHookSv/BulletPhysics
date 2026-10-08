@@ -5,11 +5,10 @@
 class CAnimControlListPanel : public vgui::ListPanel
 {
 public:
-	DECLARE_CLASS_SIMPLE(CAnimControlListPanel, vgui::ListPanel);
+    DECLARE_CLASS_SIMPLE(CAnimControlListPanel, vgui::ListPanel);
 
-	CAnimControlListPanel(vgui::Panel* parent, const char* pName);
+    CAnimControlListPanel(vgui::Panel* parent, const char* pName);
 
 private:
-
-	typedef vgui::ListPanel BaseClass;
+    typedef vgui::ListPanel BaseClass;
 };

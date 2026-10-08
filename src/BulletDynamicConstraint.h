@@ -5,12 +5,12 @@
 class CBulletDynamicConstraint : public CBulletPhysicConstraint
 {
 public:
-	CBulletDynamicConstraint(
-		int id,
-		int entindex,
-		IPhysicObject* pPhysicObject,
-		CClientConstraintConfig* pConstraintConfig,
-		btTypedConstraint* pInternalConstraint);
+    CBulletDynamicConstraint(
+        int                      id,
+        int                      entindex,
+        IPhysicObject*           pPhysicObject,
+        CClientConstraintConfig* pConstraintConfig,
+        btTypedConstraint*       pInternalConstraint);
 
-	void Update(CPhysicComponentUpdateContext* ComponentUpdateContext) override;
+    void Update(CPhysicComponentUpdateContext* ComponentUpdateContext) override;
 };

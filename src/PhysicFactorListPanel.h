@@ -33,7 +33,7 @@ public:
 
         SetPaintBackgroundEnabled(true);
         auto bgColor = GetBgColor();
-        bgColor[3] = 255;
+        bgColor[3]   = 255;
         SetBgColor(bgColor);
         m_hFont = pScheme->GetFont("Default", IsProportional());
 
@@ -42,30 +42,29 @@ public:
 
 private:
     typedef vgui::TextEntry BaseClass;
-    vgui::HFont		m_hFont{};
+    vgui::HFont             m_hFont{};
 };
 
 class CPhysicFactorListPanel : public vgui::ListPanel
 {
 public:
-	DECLARE_CLASS_SIMPLE(CPhysicFactorListPanel, vgui::ListPanel);
+    DECLARE_CLASS_SIMPLE(CPhysicFactorListPanel, vgui::ListPanel);
 
     CPhysicFactorListPanel(vgui::Panel* parent, const char* pName);
-	~CPhysicFactorListPanel();
+    ~CPhysicFactorListPanel();
 
-	void StartCaptureMode();
-	void EndCaptureMode();
-	bool IsCapturing(void) const;
-	int GetCapturingItemId(void) const;
-	int GetCapturingItemIndex(void) const;
-	void OnMousePressed(vgui::MouseCode code) override;
+    void StartCaptureMode();
+    void EndCaptureMode();
+    bool IsCapturing(void) const;
+    int  GetCapturingItemId(void) const;
+    int  GetCapturingItemIndex(void) const;
+    void OnMousePressed(vgui::MouseCode code) override;
 
 private:
+    typedef vgui::ListPanel BaseClass;
+    bool                    m_bCaptureMode{};
+    int                     m_iCaptureItemId{};
+    int                     m_iCaptureItemIndex{};
 
-	typedef vgui::ListPanel BaseClass;
-	bool m_bCaptureMode{};
-	int m_iCaptureItemId{};
-	int m_iCaptureItemIndex{};
-
-	CInlineTextEntryPanel* m_pInlineTextEntryPanel{};
+    CInlineTextEntryPanel* m_pInlineTextEntryPanel{};
 };

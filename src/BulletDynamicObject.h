@@ -6,11 +6,11 @@
 class CBulletDynamicObject : public CBaseDynamicObject
 {
 public:
-	CBulletDynamicObject(const CPhysicObjectCreationParameter& CreationParam);
+    CBulletDynamicObject(const CPhysicObjectCreationParameter& CreationParam);
 
-	~CBulletDynamicObject();
+    ~CBulletDynamicObject();
 
-	IPhysicRigidBody* CreateRigidBody(const CPhysicObjectCreationParameter& CreationParam, CClientRigidBodyConfig* pRigidConfig, int physicComponentId) override;
-	IPhysicConstraint* CreateConstraint(const CPhysicObjectCreationParameter& CreationParam, CClientConstraintConfig* pConstraintConfig, int physicComponentId) override;
-	IPhysicBehavior* CreatePhysicBehavior(const CPhysicObjectCreationParameter& CreationParam, CClientPhysicBehaviorConfig* pPhysicBehaviorConfig, int physicComponentId) override;
+    IPhysicRigidBody*  CreateRigidBody(const CPhysicObjectCreationParameter& CreationParam, CClientRigidBodyConfig* pRigidConfig, int physicComponentId) override;
+    IPhysicConstraint* CreateConstraint(const CPhysicObjectCreationParameter& CreationParam, CClientConstraintConfig* pConstraintConfig, int physicComponentId) override;
+    IPhysicBehavior*   CreatePhysicBehavior(const CPhysicObjectCreationParameter& CreationParam, CClientPhysicBehaviorConfig* pPhysicBehaviorConfig, int physicComponentId) override;
 };
