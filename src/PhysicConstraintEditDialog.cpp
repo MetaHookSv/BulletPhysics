@@ -5,10 +5,7 @@
 
 #include <format>
 
-CPhysicConstraintEditDialog::CPhysicConstraintEditDialog(vgui::Panel* parent, const char* name,
-    uint64 physicObjectId,
-    const std::shared_ptr<CClientPhysicObjectConfig>& pPhysicObjectConfig,
-    const std::shared_ptr<CClientConstraintConfig>& pConstraintConfig) :
+CPhysicConstraintEditDialog::CPhysicConstraintEditDialog(vgui::Panel* parent, const char* name, uint64 physicObjectId, const std::shared_ptr<CClientPhysicObjectConfig>& pPhysicObjectConfig, const std::shared_ptr<CClientConstraintConfig>& pConstraintConfig) :
     BaseClass(parent, name),
     m_physicObjectId(physicObjectId),
     m_pPhysicObjectConfig(pPhysicObjectConfig),
@@ -22,28 +19,28 @@ CPhysicConstraintEditDialog::CPhysicConstraintEditDialog(vgui::Panel* parent, co
     SetSize(vgui::scheme()->GetProportionalScaledValue(800), vgui::scheme()->GetProportionalScaledValue(560));
 
     // Initialize UI components
-    m_pName = new vgui::TextEntry(this, "Name");
+    m_pName           = new vgui::TextEntry(this, "Name");
     m_pDebugDrawLevel = new vgui::TextEntry(this, "DebugDrawLevel");
-    m_pType = new vgui::ComboBox(this, "Type", 0, false);
-    m_pRigidBodyA = new vgui::ComboBox(this, "RigidBodyA", 0, true);
-    m_pRigidBodyB = new vgui::ComboBox(this, "RigidBodyB", 0, true);
-    m_pOriginAX = new vgui::TextEntry(this, "OriginAX");
-    m_pOriginAY = new vgui::TextEntry(this, "OriginAY");
-    m_pOriginAZ = new vgui::TextEntry(this, "OriginAZ");
-    m_pAnglesAX = new vgui::TextEntry(this, "AnglesAX");
-    m_pAnglesAY = new vgui::TextEntry(this, "AnglesAY");
-    m_pAnglesAZ = new vgui::TextEntry(this, "AnglesAZ");
-    m_pOriginBX = new vgui::TextEntry(this, "OriginBX");
-    m_pOriginBY = new vgui::TextEntry(this, "OriginBY");
-    m_pOriginBZ = new vgui::TextEntry(this, "OriginBZ");
-    m_pAnglesBX = new vgui::TextEntry(this, "AnglesBX");
-    m_pAnglesBY = new vgui::TextEntry(this, "AnglesBY");
-    m_pAnglesBZ = new vgui::TextEntry(this, "AnglesBZ");
-    m_pForwardX = new vgui::TextEntry(this, "ForwardX");
-    m_pForwardY = new vgui::TextEntry(this, "ForwardY");
-    m_pForwardZ = new vgui::TextEntry(this, "ForwardZ");
+    m_pType           = new vgui::ComboBox(this, "Type", 0, false);
+    m_pRigidBodyA     = new vgui::ComboBox(this, "RigidBodyA", 0, true);
+    m_pRigidBodyB     = new vgui::ComboBox(this, "RigidBodyB", 0, true);
+    m_pOriginAX       = new vgui::TextEntry(this, "OriginAX");
+    m_pOriginAY       = new vgui::TextEntry(this, "OriginAY");
+    m_pOriginAZ       = new vgui::TextEntry(this, "OriginAZ");
+    m_pAnglesAX       = new vgui::TextEntry(this, "AnglesAX");
+    m_pAnglesAY       = new vgui::TextEntry(this, "AnglesAY");
+    m_pAnglesAZ       = new vgui::TextEntry(this, "AnglesAZ");
+    m_pOriginBX       = new vgui::TextEntry(this, "OriginBX");
+    m_pOriginBY       = new vgui::TextEntry(this, "OriginBY");
+    m_pOriginBZ       = new vgui::TextEntry(this, "OriginBZ");
+    m_pAnglesBX       = new vgui::TextEntry(this, "AnglesBX");
+    m_pAnglesBY       = new vgui::TextEntry(this, "AnglesBY");
+    m_pAnglesBZ       = new vgui::TextEntry(this, "AnglesBZ");
+    m_pForwardX       = new vgui::TextEntry(this, "ForwardX");
+    m_pForwardY       = new vgui::TextEntry(this, "ForwardY");
+    m_pForwardZ       = new vgui::TextEntry(this, "ForwardZ");
 
-#define CREATE_CHECK_BUTTON(name)  m_p##name = new vgui::CheckButton(this, #name, "#BulletPhysics_" #name)
+#define CREATE_CHECK_BUTTON(name) m_p##name = new vgui::CheckButton(this, #name, "#BulletPhysics_" #name)
     CREATE_CHECK_BUTTON(DisableCollision);
     CREATE_CHECK_BUTTON(UseGlobalJointFromA);
     CREATE_CHECK_BUTTON(UseLinearReferenceFrameA);
@@ -65,7 +62,7 @@ CPhysicConstraintEditDialog::CPhysicConstraintEditDialog(vgui::Panel* parent, co
 
 #undef CREATE_CHECK_BUTTON
 
-    m_pRotOrder = new vgui::ComboBox(this, "RotOrder", 0, false);
+    m_pRotOrder               = new vgui::ComboBox(this, "RotOrder", 0, false);
     m_pMaxTolerantLinearError = new vgui::TextEntry(this, "MaxTolerantLinearError");
 
     m_pPhysicFactorListPanel = new CPhysicFactorListPanel(this, "PhysicFactorListPanel");
@@ -114,7 +111,7 @@ void CPhysicConstraintEditDialog::OnResetData()
 
 void CPhysicConstraintEditDialog::OnModifyFactor(KeyValues* kv)
 {
-    auto index = kv->GetInt("index");
+    auto index    = kv->GetInt("index");
     auto newValue = kv->GetString("newValue");
 
     for (int i = 0; i < m_pPhysicFactorListPanel->GetItemCount(); ++i)
@@ -142,7 +139,8 @@ void CPhysicConstraintEditDialog::OnModifyFactor(KeyValues* kv)
 
 void CPhysicConstraintEditDialog::OnTextChanged(vgui::Panel* panel)
 {
-    if (panel == m_pType) {
+    if (panel == m_pType)
+    {
         UpdateControlStates();
     }
 }
@@ -318,133 +316,135 @@ void CPhysicConstraintEditDialog::LoadAvailableFactorsIntoControl(int type)
 {
     m_pPhysicFactorListPanel->RemoveAll();
 
-#define LOAD_FACTOR_INTO_LISTPANEL(name) LoadFactorAsListPanelItem(PhysicConstraintFactorIdx_##name, "#BulletPhysics_" #name, m_pConstraintConfig->factors[PhysicConstraintFactorIdx_##name], NAN);
+#define LOAD_FACTOR_INTO_LISTPANEL(name)               LoadFactorAsListPanelItem(PhysicConstraintFactorIdx_##name, "#BulletPhysics_" #name, m_pConstraintConfig->factors[PhysicConstraintFactorIdx_##name], NAN);
 #define LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(name) LoadFactorAsListPanelItem(PhysicConstraintFactorIdx_##name, "#BulletPhysics_" #name, m_pConstraintConfig->factors[PhysicConstraintFactorIdx_##name], PhysicConstraintFactorDefaultValue_##name);
 
     switch (type)
     {
-    case PhysicConstraint_ConeTwist: {
+        case PhysicConstraint_ConeTwist:
+        {
 
-        LOAD_FACTOR_INTO_LISTPANEL(ConeTwistSwingSpanLimit1);
-        LOAD_FACTOR_INTO_LISTPANEL(ConeTwistSwingSpanLimit2);
-        LOAD_FACTOR_INTO_LISTPANEL(ConeTwistTwistSpanLimit);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(ConeTwistSoftness);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(ConeTwistBiasFactor);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(ConeTwistRelaxationFactor);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
-        break;
-    }
-    case PhysicConstraint_Hinge:
-    {
-        LOAD_FACTOR_INTO_LISTPANEL(HingeLowLimit);
-        LOAD_FACTOR_INTO_LISTPANEL(HingeHighLimit);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(HingeSoftness);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(HingeBiasFactor);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(HingeRelaxationFactor);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
-        break;
-    }
-    case PhysicConstraint_Point:
-    {
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
-        break;
-    }
-    case PhysicConstraint_Slider:
-    {
-        LOAD_FACTOR_INTO_LISTPANEL(SliderLowerLinearLimit);
-        LOAD_FACTOR_INTO_LISTPANEL(SliderUpperLinearLimit);
-        LOAD_FACTOR_INTO_LISTPANEL(SliderLowerAngularLimit);
-        LOAD_FACTOR_INTO_LISTPANEL(SliderUpperAngularLimit);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
-        break;
-    }
-    case PhysicConstraint_Dof6:
-    {
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitZ);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
-        break;
-    }
-    case PhysicConstraint_Dof6Spring:
-    {
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitZ);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableLinearSpringX);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableLinearSpringY);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableLinearSpringZ);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableAngularSpringX);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableAngularSpringY);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableAngularSpringZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearStiffnessX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearStiffnessY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearStiffnessZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularStiffnessX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularStiffnessY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularStiffnessZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearDampingX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearDampingY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearDampingZ);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularDampingX);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularDampingY);
-        LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularDampingZ);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
-        break;
-    }
-    case PhysicConstraint_Fixed:
-    {
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
-        LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
-        break;
-    }
-    default: {
-        break;
-    }
+            LOAD_FACTOR_INTO_LISTPANEL(ConeTwistSwingSpanLimit1);
+            LOAD_FACTOR_INTO_LISTPANEL(ConeTwistSwingSpanLimit2);
+            LOAD_FACTOR_INTO_LISTPANEL(ConeTwistTwistSpanLimit);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(ConeTwistSoftness);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(ConeTwistBiasFactor);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(ConeTwistRelaxationFactor);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
+            break;
+        }
+        case PhysicConstraint_Hinge:
+        {
+            LOAD_FACTOR_INTO_LISTPANEL(HingeLowLimit);
+            LOAD_FACTOR_INTO_LISTPANEL(HingeHighLimit);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(HingeSoftness);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(HingeBiasFactor);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(HingeRelaxationFactor);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
+            break;
+        }
+        case PhysicConstraint_Point:
+        {
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
+            break;
+        }
+        case PhysicConstraint_Slider:
+        {
+            LOAD_FACTOR_INTO_LISTPANEL(SliderLowerLinearLimit);
+            LOAD_FACTOR_INTO_LISTPANEL(SliderUpperLinearLimit);
+            LOAD_FACTOR_INTO_LISTPANEL(SliderLowerAngularLimit);
+            LOAD_FACTOR_INTO_LISTPANEL(SliderUpperAngularLimit);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
+            break;
+        }
+        case PhysicConstraint_Dof6:
+        {
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitZ);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
+            break;
+        }
+        case PhysicConstraint_Dof6Spring:
+        {
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerLinearLimitZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperLinearLimitZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6LowerAngularLimitZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6UpperAngularLimitZ);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableLinearSpringX);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableLinearSpringY);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableLinearSpringZ);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableAngularSpringX);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableAngularSpringY);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(Dof6SpringEnableAngularSpringZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearStiffnessX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearStiffnessY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearStiffnessZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularStiffnessX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularStiffnessY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularStiffnessZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearDampingX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearDampingY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringLinearDampingZ);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularDampingX);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularDampingY);
+            LOAD_FACTOR_INTO_LISTPANEL(Dof6SpringAngularDampingZ);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
+            break;
+        }
+        case PhysicConstraint_Fixed:
+        {
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(LinearStopCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularCFM);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopERP);
+            LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE(AngularStopCFM);
+            break;
+        }
+        default:
+        {
+            break;
+        }
     }
 #undef LOAD_FACTOR_INTO_LISTPANEL
 #undef LOAD_FACTOR_INTO_LISTPANEL_DEFAULT_VALUE
@@ -515,7 +515,11 @@ void CPhysicConstraintEditDialog::LoadConfigIntoControls()
     LoadRigidBodyIntoControl(m_pRigidBodyB, m_pConstraintConfig->rigidbodyB);
     LoadRotOrderIntoControl(m_pConstraintConfig->rotOrder);
 
-#define LOAD_INTO_TEXT_ENTRY(from, to) { auto str##to = std::format("{0}", m_pConstraintConfig->from); m_p##to->SetText(str##to.c_str());}
+#define LOAD_INTO_TEXT_ENTRY(from, to)                                \
+    {                                                                 \
+        auto str##to = std::format("{0}", m_pConstraintConfig->from); \
+        m_p##to->SetText(str##to.c_str());                            \
+    }
 
     LOAD_INTO_TEXT_ENTRY(name, Name);
 
@@ -583,8 +587,9 @@ void CPhysicConstraintEditDialog::SaveConfigFromControls()
     SaveRigidBodyFromControl(m_pRigidBodyB, m_pConstraintConfig->rigidbodyB);
 
     // Macro to save values from text entries to the constraint configuration
-#define SAVE_FROM_TEXT_ENTRY(to, from, processor) { \
-        m_p##from->GetText(szText, sizeof(szText)); \
+#define SAVE_FROM_TEXT_ENTRY(to, from, processor)    \
+    {                                                \
+        m_p##from->GetText(szText, sizeof(szText));  \
         m_pConstraintConfig->to = processor(szText); \
     }
 
@@ -632,10 +637,11 @@ void CPhysicConstraintEditDialog::SaveConfigFromControls()
 #undef SAVE_FROM_CHECK_BUTTON
 
 // Save flags from check buttons using bitwise operations
-#define SAVE_FLAG_FROM_CHECK_BUTTON(to, from) { \
-        if (m_p##from->IsSelected()) \
-            m_pConstraintConfig->to |= PhysicConstraintFlag_##from; \
-        else \
+#define SAVE_FLAG_FROM_CHECK_BUTTON(to, from)                        \
+    {                                                                \
+        if (m_p##from->IsSelected())                                 \
+            m_pConstraintConfig->to |= PhysicConstraintFlag_##from;  \
+        else                                                         \
             m_pConstraintConfig->to &= ~PhysicConstraintFlag_##from; \
     }
 
@@ -659,7 +665,7 @@ void CPhysicConstraintEditDialog::SaveConfigFromControls()
     m_pConstraintConfig->configModified = true;
 }
 
-void CPhysicConstraintEditDialog::SaveTypeFromControl(vgui::ComboBox *pComboBox)
+void CPhysicConstraintEditDialog::SaveTypeFromControl(vgui::ComboBox* pComboBox)
 {
     auto kv = pComboBox->GetActiveItemUserData();
 
@@ -679,7 +685,7 @@ void CPhysicConstraintEditDialog::SaveRotOrderFromControl(vgui::ComboBox* pCombo
     }
 }
 
-void CPhysicConstraintEditDialog::SaveFactorsFromControl(vgui::ListPanel *pListPanel)
+void CPhysicConstraintEditDialog::SaveFactorsFromControl(vgui::ListPanel* pListPanel)
 {
     for (int i = 0; i < pListPanel->GetItemCount(); ++i)
     {
@@ -687,8 +693,8 @@ void CPhysicConstraintEditDialog::SaveFactorsFromControl(vgui::ListPanel *pListP
 
         if (item && item->kv)
         {
-            auto index = item->kv->GetInt("index");
-            auto value = item->kv->GetString("value");
+            auto index        = item->kv->GetInt("index");
+            auto value        = item->kv->GetString("value");
             auto defaultValue = item->kv->GetFloat("defaultValue");
 
             if (index >= 0 && index < _ARRAYSIZE(m_pConstraintConfig->factors))
@@ -753,15 +759,17 @@ void CPhysicConstraintEditDialog::UpdateControlStates()
 
     switch (type)
     {
-    case PhysicConstraint_Dof6:
-    case PhysicConstraint_Dof6Spring: {
+        case PhysicConstraint_Dof6:
+        case PhysicConstraint_Dof6Spring:
+        {
 
-        m_pRotOrder->SetEnabled(true);
-        break;
-    }
-    default: {
-        m_pRotOrder->SetEnabled(false);
-        break;
-    }
+            m_pRotOrder->SetEnabled(true);
+            break;
+        }
+        default:
+        {
+            m_pRotOrder->SetEnabled(false);
+            break;
+        }
     }
 }

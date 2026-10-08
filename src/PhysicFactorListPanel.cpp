@@ -17,7 +17,7 @@ void CPhysicFactorListPanel::StartCaptureMode()
 
     auto selectItemId = GetSelectedItem(0);
 
-    m_bCaptureMode = true;
+    m_bCaptureMode   = true;
     m_iCaptureItemId = selectItemId;
 
     EnterEditMode(selectItemId, 2, m_pInlineTextEntryPanel);
@@ -34,7 +34,7 @@ void CPhysicFactorListPanel::StartCaptureMode()
 
 void CPhysicFactorListPanel::EndCaptureMode()
 {
-    m_bCaptureMode = false;
+    m_bCaptureMode   = false;
     m_iCaptureItemId = -1;
     LeaveEditMode();
     RequestFocus();

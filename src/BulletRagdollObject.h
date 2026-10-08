@@ -6,24 +6,22 @@
 class CBulletRagdollObject : public CBaseRagdollObject
 {
 public:
-	CBulletRagdollObject(const CPhysicObjectCreationParameter& CreationParam);
+    CBulletRagdollObject(const CPhysicObjectCreationParameter& CreationParam);
 
-	~CBulletRagdollObject();
+    ~CBulletRagdollObject();
 
-	bool SetupBones(CRagdollObjectSetupBoneContext* Context) override;
-	void Update(CPhysicObjectUpdateContext* ObjectUpdateContext) override;
+    bool SetupBones(CRagdollObjectSetupBoneContext* Context) override;
+    void Update(CPhysicObjectUpdateContext* ObjectUpdateContext) override;
 
 protected:
+    IPhysicRigidBody*  CreateRigidBody(const CPhysicObjectCreationParameter& CreationParam, CClientRigidBodyConfig* pRigidConfig, int physicComponentId) override;
+    IPhysicConstraint* CreateConstraint(const CPhysicObjectCreationParameter& CreationParam, CClientConstraintConfig* pConstraintConfig, int physicComponentId) override;
+    IPhysicBehavior*   CreatePhysicBehavior(const CPhysicObjectCreationParameter& CreationParam, CClientPhysicBehaviorConfig* pPhysicBehaviorConfig, int physicComponentId) override;
 
-	IPhysicRigidBody* CreateRigidBody(const CPhysicObjectCreationParameter& CreationParam, CClientRigidBodyConfig* pRigidConfig, int physicComponentId) override;
-	IPhysicConstraint* CreateConstraint(const CPhysicObjectCreationParameter& CreationParam, CClientConstraintConfig* pConstraintConfig, int physicComponentId) override;
-	IPhysicBehavior* CreatePhysicBehavior(const CPhysicObjectCreationParameter& CreationParam, CClientPhysicBehaviorConfig* pPhysicBehaviorConfig, int physicComponentId) override;
+    void SaveBoneRelativeTransform(const CPhysicObjectCreationParameter& CreationParam) override;
 
-	void SaveBoneRelativeTransform(const CPhysicObjectCreationParameter& CreationParam) override;
-
-	void CheckConstraintLinearErrors(CPhysicObjectUpdateContext* ctx);
+    void CheckConstraintLinearErrors(CPhysicObjectUpdateContext* ctx);
 
 public:
-
-	btTransform m_BoneRelativeTransform[128]{};
+    btTransform m_BoneRelativeTransform[128]{};
 };

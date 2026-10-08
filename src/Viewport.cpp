@@ -22,129 +22,127 @@
 
 using namespace vgui;
 
-CViewport *g_pViewPort = NULL;
+CViewport* g_pViewPort = NULL;
 
 extern IGameUIFuncs* gameuifuncs;
 
 CViewport::CViewport() : BaseClass(NULL, "BulletPhysicsViewport")
 {
-	int swide, stall;
-	surface()->GetScreenSize(swide, stall);
+    int swide, stall;
+    surface()->GetScreenSize(swide, stall);
 
-	MakePopup(false, true);
+    MakePopup(false, true);
 
-	SetScheme2("ClientScheme");
-	SetBounds(0, 0, swide, stall);
-	SetPaintBorderEnabled(false);
-	SetPaintBackgroundEnabled(false);
-	SetMouseInputEnabled(false);
-	SetKeyBoardInputEnabled(false);
-	SetProportional(true);
+    SetScheme2("ClientScheme");
+    SetBounds(0, 0, swide, stall);
+    SetPaintBorderEnabled(false);
+    SetPaintBackgroundEnabled(false);
+    SetMouseInputEnabled(false);
+    SetKeyBoardInputEnabled(false);
+    SetProportional(true);
 }
 
 CViewport::~CViewport(void)
 {
-	if (m_pPhysicDebugViewGUI)
-	{
-		delete m_pPhysicDebugViewGUI;
-		m_pPhysicDebugViewGUI = nullptr;
-	}
+    if (m_pPhysicDebugViewGUI)
+    {
+        delete m_pPhysicDebugViewGUI;
+        m_pPhysicDebugViewGUI = nullptr;
+    }
 }
 
 void CViewport::Start(void)
 {
-	m_pPhysicDebugViewGUI = new CPhysicDebugGUI(NULL);
+    m_pPhysicDebugViewGUI = new CPhysicDebugGUI(NULL);
 
-	SetVisible(false);
+    SetVisible(false);
 }
 
 void CViewport::SetParent(VPANEL vPanel)
 {
-	BaseClass::SetParent(vPanel);
+    BaseClass::SetParent(vPanel);
 
-	m_pPhysicDebugViewGUI->SetParent(this);
+    m_pPhysicDebugViewGUI->SetParent(this);
 
-	if (g_iEngineType != ENGINE_GOLDSRC_HL25 && DpiManager()->IsHighDpiSupportEnabled())
-	{
-		SetProportional(true);
-	}
+    if (g_iEngineType != ENGINE_GOLDSRC_HL25 && DpiManager()->IsHighDpiSupportEnabled())
+    {
+        SetProportional(true);
+    }
 }
 
 void CViewport::Think(void)
 {
-	
 }
 
 void CViewport::VidInit(void)
 {
-
 }
 
 void CViewport::Init(void)
 {
-	m_pPhysicDebugViewGUI->Init();
+    m_pPhysicDebugViewGUI->Init();
 }
 
 void CViewport::NewMap(void)
 {
-	m_pPhysicDebugViewGUI->NewMap();
+    m_pPhysicDebugViewGUI->NewMap();
 }
 
 void CViewport::OpenPhysicDebugGUI()
 {
-	m_pPhysicDebugViewGUI->Activate();
+    m_pPhysicDebugViewGUI->Activate();
 }
 
 void CViewport::ClosePhysicDebugGUI()
 {
-	m_pPhysicDebugViewGUI->Close();
+    m_pPhysicDebugViewGUI->Close();
 }
 
 void CViewport::SwitchPhysicDebugGUI()
 {
-	if(m_pPhysicDebugViewGUI->IsVisible())
-		m_pPhysicDebugViewGUI->Close();
-	else
-		m_pPhysicDebugViewGUI->Activate();
+    if (m_pPhysicDebugViewGUI->IsVisible())
+        m_pPhysicDebugViewGUI->Close();
+    else
+        m_pPhysicDebugViewGUI->Activate();
 }
 
 bool CViewport::PhysicDebugGUIHasFocus()
 {
-	if (m_pPhysicDebugViewGUI->IsVisible() && m_pPhysicDebugViewGUI->HasFocus())
-	{
-		return true;
-	}
+    if (m_pPhysicDebugViewGUI->IsVisible() && m_pPhysicDebugViewGUI->HasFocus())
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 void CViewport::ActivateClientUI(void)
 {
-	SetVisible(true);
+    SetVisible(true);
 
-	auto pPreviousPanel = m_hOldFocus.Get();
+    auto pPreviousPanel = m_hOldFocus.Get();
 
-	if (pPreviousPanel)
-	{
-		vgui::input()->SetAppModalSurface(pPreviousPanel->GetVPanel());
-		vgui::input()->SetMouseFocus(pPreviousPanel->GetVPanel());
-		m_hOldFocus.Set(nullptr);
-	}
+    if (pPreviousPanel)
+    {
+        vgui::input()->SetAppModalSurface(pPreviousPanel->GetVPanel());
+        vgui::input()->SetMouseFocus(pPreviousPanel->GetVPanel());
+        m_hOldFocus.Set(nullptr);
+    }
 }
 
 void CViewport::HideClientUI(void)
 {
-	m_hOldFocus.Set(vgui::input()->GetAppModalSurface());
+    m_hOldFocus.Set(vgui::input()->GetAppModalSurface());
 
-	SetVisible(false);
+    SetVisible(false);
 }
 
 void CViewport::ConnectToServer(const char* game, int IP, int port)
 {
-	m_pPhysicDebugViewGUI->ConnectToServer(game, IP, port);
+    m_pPhysicDebugViewGUI->ConnectToServer(game, IP, port);
 }
 
 void CViewport::UpdateInspectStuffs()
 {
-	m_pPhysicDebugViewGUI->UpdateInspectStuffs();
+    m_pPhysicDebugViewGUI->UpdateInspectStuffs();
 }

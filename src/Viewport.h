@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef GetCurrentTime
-#undef GetCurrentTime
+#    undef GetCurrentTime
 #endif
 
 #include <vgui/VGUI.h>
@@ -18,35 +18,35 @@ class CPhysicDebugGUI;
 
 class CViewport : public vgui::Panel
 {
-	DECLARE_CLASS_SIMPLE(CViewport, vgui::Panel);
+    DECLARE_CLASS_SIMPLE(CViewport, vgui::Panel);
 
 public:
-	CViewport();
-	virtual ~CViewport(void);
+    CViewport();
+    virtual ~CViewport(void);
 
 public:
-	void Think(void) override;
-	void SetParent(vgui::VPANEL vPanel) override;
+    void Think(void) override;
+    void SetParent(vgui::VPANEL vPanel) override;
 
 public:
-	void Start(void);
-	void Init(void);
-	void NewMap(void);
-	void VidInit(void);
-	void ActivateClientUI(void);
-	void HideClientUI(void);
-	void ConnectToServer(const char* game, int IP, int port);
+    void Start(void);
+    void Init(void);
+    void NewMap(void);
+    void VidInit(void);
+    void ActivateClientUI(void);
+    void HideClientUI(void);
+    void ConnectToServer(const char* game, int IP, int port);
 
-	void OpenPhysicDebugGUI();
-	void ClosePhysicDebugGUI();
-	void SwitchPhysicDebugGUI();
-	bool PhysicDebugGUIHasFocus();
+    void OpenPhysicDebugGUI();
+    void ClosePhysicDebugGUI();
+    void SwitchPhysicDebugGUI();
+    bool PhysicDebugGUIHasFocus();
 
-	void UpdateInspectStuffs();
+    void UpdateInspectStuffs();
 
 private:
-	CPhysicDebugGUI* m_pPhysicDebugViewGUI{};
-	vgui::PHandle m_hOldFocus{};
+    CPhysicDebugGUI* m_pPhysicDebugViewGUI{};
+    vgui::PHandle    m_hOldFocus{};
 };
 
-extern CViewport *g_pViewPort;
+extern CViewport* g_pViewPort;

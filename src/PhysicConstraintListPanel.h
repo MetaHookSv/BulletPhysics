@@ -5,11 +5,10 @@
 class CPhysicConstraintListPanel : public vgui::ListPanel
 {
 public:
-	DECLARE_CLASS_SIMPLE(CPhysicConstraintListPanel, vgui::ListPanel);
+    DECLARE_CLASS_SIMPLE(CPhysicConstraintListPanel, vgui::ListPanel);
 
-	CPhysicConstraintListPanel(vgui::Panel* parent, const char* pName);
+    CPhysicConstraintListPanel(vgui::Panel* parent, const char* pName);
 
 private:
-
-	typedef vgui::ListPanel BaseClass;
+    typedef vgui::ListPanel BaseClass;
 };

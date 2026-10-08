@@ -21,24 +21,23 @@ class CAnimControlPage;
 class CPhysicEditorDialog : public vgui::Frame
 {
 public:
-	DECLARE_CLASS_SIMPLE(CPhysicEditorDialog, vgui::Frame);
+    DECLARE_CLASS_SIMPLE(CPhysicEditorDialog, vgui::Frame);
 
-	CPhysicEditorDialog(vgui::Panel *parent, const char* name, uint64 physicObjectId, const std::shared_ptr<CClientPhysicObjectConfig> &pPhysicObjectConfig);
-	~CPhysicEditorDialog();
+    CPhysicEditorDialog(vgui::Panel* parent, const char* name, uint64 physicObjectId, const std::shared_ptr<CClientPhysicObjectConfig>& pPhysicObjectConfig);
+    ~CPhysicEditorDialog();
 
 private:
+    void OnCommand(const char* command) override;
 
-	void OnCommand(const char* command) override;
+    typedef vgui::Frame BaseClass;
 
-	typedef vgui::Frame BaseClass;
+    vgui::PropertySheet*     m_pTabPanel{};
+    CPhysicObjectConfigPage* m_pPhysicObjectConfigPage{};
+    CPhysicRigidBodyPage*    m_pPhysicRigidBodyPage{};
+    CPhysicConstraintPage*   m_pPhysicConstraintPage{};
+    CPhysicBehaviorPage*     m_pPhysicBehaviorPage{};
+    CAnimControlPage*        m_pAnimControlPage{};
 
-	vgui::PropertySheet* m_pTabPanel{};
-	CPhysicObjectConfigPage* m_pPhysicObjectConfigPage{};
-	CPhysicRigidBodyPage* m_pPhysicRigidBodyPage{};
-	CPhysicConstraintPage* m_pPhysicConstraintPage{};
-	CPhysicBehaviorPage* m_pPhysicBehaviorPage{};
-	CAnimControlPage* m_pAnimControlPage{};
-
-	uint64 m_physicObjectId{};
-	std::shared_ptr<CClientPhysicObjectConfig> m_pPhysicObjectConfig;
+    uint64                                     m_physicObjectId{};
+    std::shared_ptr<CClientPhysicObjectConfig> m_pPhysicObjectConfig;
 };

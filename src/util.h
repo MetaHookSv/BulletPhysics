@@ -12,7 +12,7 @@ qboolean UTIL_ParseStringAsVector2(const char* string, float* vec);
 qboolean UTIL_ParseStringAsVector3(const char* string, float* vec);
 qboolean UTIL_ParseStringAsVector4(const char* string, float* vec);
 
-void UTIL_RemoveFileExtension(std::string& filePath);
+void        UTIL_RemoveFileExtension(std::string& filePath);
 std::string trim(const std::string& str);
 
 #define PROJECT_X(x, w) ((1.0f + (float)(x)) * (float)(w) * 0.5f)
