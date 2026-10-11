@@ -109,7 +109,9 @@ target_compile_options(bulletphysics_settings INTERFACE /permissive /W3
     $<$<CONFIG:Release>:/wd4244;/wd4267;/wd4305>)
 
 include(cmake/Sources.cmake)
+include(cmake/SourceGroups.cmake)
 add_library(BulletPhysics SHARED ${BULLETPHYSICS_SOURCES})
+bulletphysics_assign_source_groups(BulletPhysics)
 target_link_libraries(BulletPhysics PRIVATE bulletphysics_settings libglew_static ${bullet_libraries} opengl32)
 target_compile_definitions(BulletPhysics PRIVATE $<$<CONFIG:Debug>:_DEBUG>)
 target_compile_options(BulletPhysics PRIVATE /MP /Zi $<$<CONFIG:Debug>:/arch:SSE2>)
@@ -130,6 +132,7 @@ install(DIRECTORY assets/svencoop_downloads DESTINATION .)
 option(BULLETPHYSICS_BUILD_AVX2 "Also build and install BulletPhysics_AVX2.dll" OFF)
 if(BULLETPHYSICS_BUILD_AVX2)
     add_library(BulletPhysics_AVX2 SHARED ${BULLETPHYSICS_SOURCES})
+    bulletphysics_assign_source_groups(BulletPhysics_AVX2)
     target_link_libraries(BulletPhysics_AVX2 PRIVATE bulletphysics_settings libglew_static ${bullet_libraries} opengl32)
     target_compile_definitions(BulletPhysics_AVX2 PRIVATE $<$<CONFIG:Debug>:_DEBUG>)
     # Release carries /arch:AVX2; Debug keeps the baseline /arch:SSE2 so debugging
