@@ -20,14 +20,15 @@
 #include "ClientPhysicManager.h"
 #include "Viewport.h"
 
-static hook_t* g_phook_GameStudioRenderer_StudioSetupBones = NULL;
-static hook_t* g_phook_GameStudioRenderer_StudioDrawPlayer = NULL;
-static hook_t* g_phook_GameStudioRenderer_StudioDrawModel  = NULL;
-static hook_t* g_phook_R_StudioSetupBones                  = NULL;
-static hook_t* g_phook_R_StudioDrawPlayer                  = NULL;
-static hook_t* g_phook_R_StudioDrawModel                   = NULL;
-static hook_t* g_phook_studioapi_StudioCheckBBox           = NULL;
-static hook_t* g_phook_efxapi_R_TempModel                  = NULL;
+static hook_t* g_phook_GameStudioRenderer_StudioSetupBones  = NULL;
+static hook_t* g_phook_GameStudioRenderer_StudioDrawPlayer  = NULL;
+static hook_t* g_phook_GameStudioRenderer__StudioDrawPlayer = NULL;
+static hook_t* g_phook_GameStudioRenderer_StudioDrawModel   = NULL;
+static hook_t* g_phook_R_StudioSetupBones                   = NULL;
+static hook_t* g_phook_R_StudioDrawPlayer                   = NULL;
+static hook_t* g_phook_R_StudioDrawModel                    = NULL;
+static hook_t* g_phook_studioapi_StudioCheckBBox            = NULL;
+static hook_t* g_phook_efxapi_R_TempModel                   = NULL;
 
 cl_enginefunc_t        gEngfuncs;
 engine_studio_api_t    IEngineStudio;
@@ -478,6 +479,11 @@ int __fastcall GameStudioRenderer_StudioDrawPlayer(void* pthis, int dummy, int f
     return StudioDrawPlayer_Template(gPrivateFuncs.GameStudioRenderer_StudioDrawPlayer, flags, pplayer, pthis, dummy);
 }
 
+int __fastcall GameStudioRenderer__StudioDrawPlayer(void* pthis, int dummy, int flags, struct entity_state_s* pplayer)
+{
+    return StudioDrawPlayer_Template(gPrivateFuncs.GameStudioRenderer__StudioDrawPlayer, flags, pplayer, pthis, dummy);
+}
+
 int studioapi_StudioCheckBBox()
 {
     int nVisible = 0;
@@ -503,6 +509,8 @@ void ClientStudio_FillAddress(PVOID clientBase)
         GamedataResolvePtr(clientBase, "client", "GameStudioRenderer_StudioDrawModel", MH_GAMESYMBOL_KIND_VIRTUAL_FUNCTION, false);
     gPrivateFuncs.GameStudioRenderer_StudioDrawPlayer = (decltype(gPrivateFuncs.GameStudioRenderer_StudioDrawPlayer))
         GamedataResolvePtr(clientBase, "client", "GameStudioRenderer_StudioDrawPlayer", MH_GAMESYMBOL_KIND_VIRTUAL_FUNCTION, false);
+    gPrivateFuncs.GameStudioRenderer__StudioDrawPlayer = (decltype(gPrivateFuncs.GameStudioRenderer__StudioDrawPlayer))
+        GamedataResolvePtr(clientBase, "client", "GameStudioRenderer__StudioDrawPlayer", MH_GAMESYMBOL_KIND_VIRTUAL_FUNCTION, false);
     gPrivateFuncs.GameStudioRenderer_StudioSetupBones = (decltype(gPrivateFuncs.GameStudioRenderer_StudioSetupBones))
         GamedataResolvePtr(clientBase, "client", "GameStudioRenderer_StudioSetupBones", MH_GAMESYMBOL_KIND_VIRTUAL_FUNCTION, false);
 }
@@ -519,7 +527,13 @@ void ClientStudio_InstallHooks()
         Install_InlineHook(GameStudioRenderer_StudioSetupBones);
     }
 
-    if (gPrivateFuncs.GameStudioRenderer_StudioDrawPlayer)
+    // CS/CZ can dispatch directly to the inner method, bypassing the prediction wrapper.
+    // Hook only the inner method when present so wrapper calls do not apply physics twice.
+    if (gPrivateFuncs.GameStudioRenderer__StudioDrawPlayer)
+    {
+        Install_InlineHook(GameStudioRenderer__StudioDrawPlayer);
+    }
+    else if (gPrivateFuncs.GameStudioRenderer_StudioDrawPlayer)
     {
         Install_InlineHook(GameStudioRenderer_StudioDrawPlayer);
     }
@@ -572,7 +586,11 @@ void ClientStudio_UninstallHooks()
         Uninstall_Hook(GameStudioRenderer_StudioSetupBones);
     }
 
-    if (gPrivateFuncs.GameStudioRenderer_StudioDrawPlayer)
+    if (gPrivateFuncs.GameStudioRenderer__StudioDrawPlayer)
+    {
+        Uninstall_Hook(GameStudioRenderer__StudioDrawPlayer);
+    }
+    else if (gPrivateFuncs.GameStudioRenderer_StudioDrawPlayer)
     {
         Uninstall_Hook(GameStudioRenderer_StudioDrawPlayer);
     }

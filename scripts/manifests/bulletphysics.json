@@ -57,7 +57,7 @@
     },
     {
       "when": ["cstrike-3248", "cstrike-3647", "cstrike-8684", "cstrike-10210", "czero-8684", "czero-10210"],
-      "symbols": {"client": {"g_PlayerExtraInfo": "global"}}
+      "symbols": {"client": {"g_PlayerExtraInfo": "global", "GameStudioRenderer__StudioDrawPlayer": "virtualFunction"}}
     },
     {
       "when": ["czeror-8684", "czeror-10210"],

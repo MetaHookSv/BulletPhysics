@@ -53,3 +53,24 @@ Release 下插件目标为 `/GL`，测试链接使用 `/LTCG`。
 2026-10-03，适用于引入 `tests/` 的变更（含配置序列化、旧格式解析、OBJ 加载与 Bullet 约束修复）：
 本地 Release 与 Debug 均构建三个测试目标，`ctest` 3/3 通过；对两处生产代码临时变异、
 以及回退到修复前源码时，对应测试均失败。未进行游戏内运行验证。
+
+2026-10-15，MetaHookSv #926，CS/CZ 内层玩家绘制入口接入：
+
+- 聚合树 `build/x86/Debug` 构建 BulletPhysics 和三个测试目标成功；CTest 3/3 通过，
+  `BulletPhysics-format-check` 通过，构建同步的 19 个 manifest catalog 校验通过。
+- `bullet_backend_tests` 新增 hook 路由回归：存在内层时只挂内层、缺少内层时回退外层、
+  无客户端入口时不安装，以及重复安装/卸载的幂等性。
+- 使用已发布 GoldSrc_VibeSignatures 数据重新裁剪 catalog；CS/CZ 组包含
+  `GameStudioRenderer__StudioDrawPlayer`。上游 finder 已存在，无需复制槽位或新增扫描回退。
+- CZ 10210 Windows / `cs_italy_cz`：真实 DLL+catalog 加载后，WinDbg 确认内层 hook
+  非空、外层 hook 为空。玩家 #4 的 render entity sentinel 为 4，稳定帧 origin 为
+  `(-528,-1568,-203.969)`，AABB 为 `(-541.109,-1579.849,-235.927)` 至
+  `(-500.925,-1556.973,-176.154)`，R_CullBox=0。已观察到 CT BOT 模型可见，并检查
+  转向、移动、回合切换后的画面；不是完整任期模式路线或所有模型/死亡状态回归。
+- 长时间调试暂停后曾遇到整帧黑色截图，重启进程后恢复；视觉检查使用重启后的进程。
+- CS 1.6 10210 Windows / `cs_italy`：删除用户指定的旧 AVX2 DLL 后确认加载新 baseline。
+  本地玩家更新栈为 `UpdateBonesForRagdoll -> GameStudioRenderer__StudioDrawPlayer ->
+  GameStudioRenderer_StudioSetupBones`，sentinel=1、flags=0x20。原版 CS 无 BOT；
+  此项仅验证本地玩家骨骼路径，未验证多人/demo 中的其他玩家显示。
+- 两次调试均已清除断点、分离调试器并退出测试游戏。新 baseline DLL/PDB 和 catalog
+  留在本机 czero/cstrike 测试安装中；不代表已发布插件版本。未实机验证旧引擎或 CZDS。

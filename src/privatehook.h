@@ -21,6 +21,7 @@ typedef struct
     void(__fastcall* GameStudioRenderer_StudioSetupBones)(void* pthis, int);
     int(__fastcall* GameStudioRenderer_StudioDrawModel)(void* pthis, int, int flags);
     int(__fastcall* GameStudioRenderer_StudioDrawPlayer)(void* pthis, int, int flags, struct entity_state_s* pplayer);
+    int(__fastcall* GameStudioRenderer__StudioDrawPlayer)(void* pthis, int, int flags, struct entity_state_s* pplayer);
 
     //IEngineStudio / efxapi (public interface-derived, not game-private)
     int (*studioapi_StudioCheckBBox)(void);

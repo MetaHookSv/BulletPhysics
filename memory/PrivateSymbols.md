@@ -79,13 +79,22 @@ only when `g_iEngineType == ENGINE_SVENGINE`, matching the manifest's Sven-only 
 | `g_PlayerExtraInfo` | global | `extra_player_info_t (*)[65]` | required for `cstrike` / `czero` | `CounterStrike.cpp` `CounterStrike_IsVIP()` / `CounterStrike_GetTeamNumber()` |
 | `g_PlayerExtraInfo_CZDS` | global | `extra_player_info_czds_t (*)[65]` | required for `czeror` | `CounterStrike.cpp` (the `_CZDS` layout) |
 | `GameStudioRenderer_StudioDrawModel` | virtualFunction | `__fastcall` fn ptr | **optional** | hooked when present from `ClientStudio_InstallHooks` |
-| `GameStudioRenderer_StudioDrawPlayer` | virtualFunction | `__fastcall` fn ptr | **optional** | hooked when present from `ClientStudio_InstallHooks` |
+| `GameStudioRenderer_StudioDrawPlayer` | virtualFunction | `__fastcall` fn ptr | **optional** | fallback hook when the inner player method is absent |
+| `GameStudioRenderer__StudioDrawPlayer` | virtualFunction | `__fastcall` fn ptr | **optional at runtime**, required in the CS/CZ manifest group | preferred player hook; covers direct inner dispatch and calls through the prediction wrapper |
 | `GameStudioRenderer_StudioSetupBones` | virtualFunction | `__fastcall` fn ptr | **optional** | hooked when present from `ClientStudio_InstallHooks` |
 
-The three `GameStudioRenderer_*` virtuals are resolved directly by symbol name
+The `GameStudioRenderer_*` virtuals are resolved directly by symbol name
 (`src/exportfuncs.cpp`, `ClientStudio_FillAddress`) — the host performs the vtable lookup,
 so the plugin no longer derives vtable indices. Clients that do not publish them keep the
 engine-side `R_Studio*` hooks only, which is the intended path for SvEngine client installs.
+
+CS/CZ publish both the outer prediction wrapper and the inner `_StudioDrawPlayer`.
+Their public Studio interface can bypass the outer method, so only hooking the outer
+method misses both normal rendering and BP's auxiliary bone updates (MetaHookSv #926).
+Prefer the inner hook when present and install only one player hook. CZDS and other
+clients without the inner symbol keep the outer hook. Never hardcode the virtual slot;
+the Windows/Linux layouts differ. The manifest requires the inner symbol for every
+CS/CZ version it already supports, while runtime lookup remains optional for other clients.
 
 ### Sven Co-op client view-entity slot
 

@@ -9,8 +9,81 @@
 #include "BulletPhysicManager.h"
 #include "mathlib2.h"
 #include "test_support.h"
+#include "plugins.h"
+#include "privatehook.h"
 
 extern cvar_t* bv_simrate;
+
+void ClientStudio_InstallHooks();
+void ClientStudio_UninstallHooks();
+
+static void* s_HookedPlayerMethod;
+static int   s_HookCount;
+static int   s_UnhookCount;
+static int   s_HookToken;
+
+static hook_t* TestInstallPlayerHook(void* original, void* replacement, void** trampoline)
+{
+    assert(original && replacement && original != replacement);
+    s_HookedPlayerMethod = original;
+    ++s_HookCount;
+    *trampoline = original;
+    return reinterpret_cast<hook_t*>(&s_HookToken);
+}
+
+static BOOL TestUninstallPlayerHook(hook_t* hook)
+{
+    assert(reinterpret_cast<hook_t*>(&s_HookToken) == hook);
+    ++s_UnhookCount;
+    return TRUE;
+}
+
+static int __fastcall TestOuterPlayerMethod(void*, int, int, entity_state_s*)
+{
+    return 1;
+}
+
+static int __fastcall TestInnerPlayerMethod(void*, int, int, entity_state_s*)
+{
+    return 2;
+}
+
+static void TestPlayerHookCoversDirectInnerDispatch()
+{
+    const auto     savedFunctions = gPrivateFuncs;
+    auto*          savedAPI       = g_pMetaHookAPI;
+    metahook_api_t api{};
+    api.InlineHook = TestInstallPlayerHook;
+    api.UnHook     = TestUninstallPlayerHook;
+    g_pMetaHookAPI = &api;
+
+    for (int variant = 0; variant < 3; ++variant)
+    {
+        gPrivateFuncs        = {};
+        s_HookedPlayerMethod = nullptr;
+        s_HookCount          = 0;
+        s_UnhookCount        = 0;
+        if (variant < 2)
+            gPrivateFuncs.GameStudioRenderer_StudioDrawPlayer = TestOuterPlayerMethod;
+        if (variant == 0)
+            gPrivateFuncs.GameStudioRenderer__StudioDrawPlayer = TestInnerPlayerMethod;
+
+        ClientStudio_InstallHooks();
+        ClientStudio_InstallHooks(); // Installation is idempotent.
+        assert((variant < 2 ? 1 : 0) == s_HookCount);
+        if (variant == 0)
+            assert(reinterpret_cast<void*>(TestInnerPlayerMethod) == s_HookedPlayerMethod);
+        else if (variant == 1)
+            assert(reinterpret_cast<void*>(TestOuterPlayerMethod) == s_HookedPlayerMethod);
+
+        ClientStudio_UninstallHooks();
+        ClientStudio_UninstallHooks();
+        assert(s_HookCount == s_UnhookCount);
+    }
+
+    gPrivateFuncs  = savedFunctions;
+    g_pMetaHookAPI = savedAPI;
+}
 
 static bool IsNearVector3(const btVector3& expected, const btVector3& actual, float tolerance = 1e-4f)
 {
@@ -483,6 +556,8 @@ static void TestPhysicObjectIdKeepsModelIdentity()
 int main()
 {
     TestInitPluginRuntime();
+
+    TestPlayerHookCoversDirectInnerDispatch();
 
     TestEulerAnglesRoundTrip();
     TestBoneMatrixConversion();
