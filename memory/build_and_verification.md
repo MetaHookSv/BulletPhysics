@@ -18,7 +18,7 @@ Bullet/GLEW 使用父工程 VC-LTL；Bullet 保留单精度，关闭额外程序
 
 ## gamedata 和安装
 
-manifest 覆盖 17 个版本，声明必需、可选和 Sven/CS/CZ 条件符号。构建同步与校验默认开启，
+manifest 覆盖 23 个版本，声明必需、可选和 Sven/CS/CZ 条件符号。构建同步与校验默认开启，
 原始缓存支持离线。Sven 8948 不要求视角实体槽；10257 在发布门禁中要求它。
 六个旧 Half-Life 版本只有 engine 数据，不能据此宣称客户端能加载。
 
@@ -74,3 +74,16 @@ Release 下插件目标为 `/GL`，测试链接使用 `/LTCG`。
   此项仅验证本地玩家骨骼路径，未验证多人/demo 中的其他玩家显示。
 - 两次调试均已清除断点、分离调试器并退出测试游戏。新 baseline DLL/PDB 和 catalog
   留在本机 czero/cstrike 测试安装中；不代表已发布插件版本。未实机验证旧引擎或 CZDS。
+
+2026-10-18，MetaHookSv #930，Blue Shift / Opposing Force 客户端 catalog：
+
+- 触发信号：bshift / gearbox 加载 BulletPhysics 时，`g_iUser1` 报客户端模块不在 gamedata。
+- 根因：上游原先缺少扩展客户端数据，插件 manifest 也未选择这两个模组。仅发布上游数据
+  不会使构建同步器打包它们；消费端需同时加入 bshift / gearbox 的 8684、10210 四个版本。
+- 上游 Release Build [39046628417](https://github.com/HLND2T/GoldSrc_VibeSignatures/actions/runs/39046628417)
+  与 Deploy Pages [39048030744](https://github.com/HLND2T/GoldSrc_VibeSignatures/actions/runs/39048030744)
+  全部成功（含部署后 CDN 字节校验）后，使用线上 index 全新同步、裁剪了 23 个快照。
+- `validate-gamedata.py --manifest` 和 `sync-gamedata.py --validate-only` 均通过；四个新增版本
+  均保留必需的 `g_iUser1` / `g_iUser2`。bshift 的可选客户端 StudioRenderer 符号正常保留；
+  gearbox Windows 使用已有引擎端 hooks，不要求不存在的客户端 StudioRenderer 符号。
+- 验证范围：发布数据的同步、裁剪、完整性和 manifest 覆盖；未进行游戏内启动或物理效果验证。
