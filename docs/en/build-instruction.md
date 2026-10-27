@@ -17,10 +17,7 @@ scripts\build-BulletPhysics-x86-Release.bat
 
 Both scripts configure with `Visual Studio 17 2022 -A Win32`, build and install.
 They work from outside the repository and propagate failure exit codes. The
-scripts configure plain Debug and Release; the optional
-`BULLETPHYSICS_BUILD_AVX2` switch adds an extra Release target built with
-`/arch:AVX2` and installed as `BulletPhysics_AVX2.dll` (the launcher probes that
-name before `BulletPhysics.dll`). Outputs are `build/x86/<configuration>` and
+scripts configure plain Debug and Release. Outputs are `build/x86/<configuration>` and
 `install/x86/<configuration>`; installation does not deploy to a running game.
 
 ## Dependencies
