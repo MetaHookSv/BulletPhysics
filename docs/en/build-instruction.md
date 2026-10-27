@@ -34,8 +34,8 @@ same-named environment variables supply defaults on first configure. Use quoted
 | --- | --- | --- |
 | `METAHOOK_SOURCE_PATH` | MetaHook API, HLSDK/SourceSDK/VGUI sources and `IPanel2.h` | latest `main` |
 | `VGUI2EXTENSION_SOURCE_PATH` | Public interface headers under `include/Interface` | `cd7ef6e3b7fb51d3c98e6d7dadec02dd1fa08c4f` |
-| `GLEW_SOURCE_PATH` | glew-cmake with `libglew_static` | `56ed32d4a929f993f0e6b7f905af9be4d38fda04` |
-| `BULLET3_SOURCE_PATH` | hzqst Bullet3 fork, including `src/btBulletDynamicsCommon.h` | `1ece383aeb5a148533ad5c0cd829cd10d38117c3` |
+| `GLEW_SOURCE_PATH` | glew-cmake with `libglew_static` | `459d9b95457c5db337e2742a5501c21faddda326` |
+| `BULLET3_SOURCE_PATH` | hzqst Bullet3 fork, including `src/btBulletDynamicsCommon.h` | `55db1ffd033943718f34b013d6e17767ad1dd054` |
 
 For example:
 
@@ -56,8 +56,7 @@ statically in this project's build tree. ScopeExit, tinyobjloader and Chocobo1Ha
 are pinned submodules initialized during configure. No SDL, Capstone or FreeImage
 build is required.
 
-VC-LTL 5.3.1 is downloaded with SHA-256 verification to `thirdparty/cache/`, shared
-by Debug/Release. The build uses C++20 and `/MTd` / `/MT`; Release enables LTO.
+The build uses C++20 and `/MTd` / `/MT`; Release enables LTO.
 Bullet stays single precision and its SDK, demos, extras and Python bindings are disabled.
 
 ## gamedata

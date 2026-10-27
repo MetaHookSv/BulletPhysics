@@ -1,5 +1,3 @@
-set(BULLETPHYSICS_DEPENDENCY_CACHE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/cache" CACHE PATH "Downloaded dependency cache")
-set(VC_LTL_Root "${BULLETPHYSICS_DEPENDENCY_CACHE_DIR}/VC-LTL-5.3.1" CACHE PATH "VC-LTL binary package root")
 set(METAHOOK_SOURCE_PATH "$ENV{METAHOOK_SOURCE_PATH}" CACHE PATH "MetaHook source tree; empty fetches the pinned SDK")
 set(VGUI2EXTENSION_SOURCE_PATH "$ENV{VGUI2EXTENSION_SOURCE_PATH}" CACHE PATH "VGUI2Extension source tree providing public interface headers; empty fetches the pinned commit")
 set(GLEW_SOURCE_PATH "$ENV{GLEW_SOURCE_PATH}" CACHE PATH "glew-cmake source tree providing libglew_static; empty fetches the pinned commit")
@@ -64,12 +62,12 @@ function(bulletphysics_prepare_dependencies)
     if(NOT GLEW_SOURCE_PATH)
         bulletphysics_fetch_source(bulletphysics_glew
             "https://github.com/hzqst/glew-cmake"
-            "56ed32d4a929f993f0e6b7f905af9be4d38fda04" glew_source)
+            "459d9b95457c5db337e2742a5501c21faddda326" glew_source)
     endif()
     if(NOT BULLET3_SOURCE_PATH)
         bulletphysics_fetch_source(bulletphysics_bullet3
             "https://github.com/hzqst/bullet3"
-            "1ece383aeb5a148533ad5c0cd829cd10d38117c3" bullet3_source)
+            "55db1ffd033943718f34b013d6e17767ad1dd054" bullet3_source)
     endif()
     foreach(dependency METAHOOK VGUI2EXTENSION GLEW BULLET3)
         string(TOLOWER "${dependency}" lower)
@@ -115,6 +113,4 @@ function(bulletphysics_prepare_dependencies)
     set(BULLETPHYSICS_CHOCOBO1HASH_INCLUDE_DIRS "${chocobo1hash_source}/src" PARENT_SCOPE)
     set(CHOCOBO1HASH_SOURCE_PATH "${chocobo1hash_source}" PARENT_SCOPE)
     message(STATUS "CHOCOBO1HASH_SOURCE_PATH: ${chocobo1hash_source}")
-    include("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/VCLTL.cmake")
-    bulletphysics_prepare_vcltl()
 endfunction()

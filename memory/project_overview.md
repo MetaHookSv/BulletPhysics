@@ -128,7 +128,7 @@ flowchart TD
 - src/VGUI2ExtensionImport.*, Viewport.*, PhysicDebugGUI.*, PhysicEditorDialog.*, Physic*{Page,Panel,Dialog}.*, AnimControl*.*, BaseUI.cpp, GameUI.cpp, ClientVGUI.cpp - VGUI2Extension interfaces, debug viewport, inspect/select, and configuration editing UI.
 - src/PhysicUTIL.*, src/util.*, src/mathlib2.* - configuration serialization, model-integrity validation, type/factor conversion, and other physics/math utilities.
 - tests/ - configuration, shipped-asset and Bullet backend regression tests, enabled by BULLETPHYSICS_BUILD_TESTS; see [[build_and_verification]].
-- CMakeLists.txt, cmake/Sources.cmake, cmake/Dependencies.cmake, cmake/VCLTL.cmake - Windows x86 C++20 DLL build, explicit SDK/plugin compile list and pinned dependencies.
+- CMakeLists.txt, cmake/Sources.cmake, cmake/Dependencies.cmake - Windows x86 C++20 DLL build, explicit SDK/plugin compile list and pinned dependencies.
 - docs/en/features.md, docs/zh-CN/features.md - functionality and legacy ragdoll configuration; assets/svencoop/bulletphysics/* and assets/svencoop_downloads/* - UI/localization and physics runtime resources.
 
 ## Console Commands and cvars
@@ -146,7 +146,7 @@ flowchart TD
 - tinyobjloader, ScopeExit, Chocobo1Hash: OBJ collision resources, scope cleanup, and hashing/integrity helpers; pinned submodules.
 - Runtime resources: *_physics.txt/*_ragdoll.txt, BSP brush data, external .obj meshes, assets/svencoop/bulletphysics/*.res and localized text.
 - The plugin only consumes MetaHook public API/HLSDK/SourceSDK/VGUI sources; it does not build the host. VGUI2Extension consumes public interface headers only, with the UI supplied at runtime. When no source path is provided, FetchContent is used — MetaHook from the latest `main`, the other dependencies at fixed commits.
-- CMakeLists.txt builds Windows MSVC x86 Debug/Release with C++20, static CRT and VC-LTL. cmake/Sources.cmake preserves the 167-item compile list from the source vcxproj. VC-LTL uses the verified 5.3.1 package. SDL, Capstone, and FreeImage are not dependencies of this plugin.
+- CMakeLists.txt builds Windows MSVC x86 Debug/Release with C++20 and static CRT. cmake/Sources.cmake preserves the 167-item compile list from the source vcxproj. SDL, Capstone, and FreeImage are not dependencies of this plugin.
 - The plugin keeps IPluginsV4/CreateInterface and the original calling conventions; the physics interfaces are internal headers with no separate public SDK.
 - Private symbols resolve through the host ResolveGameSymbol; consumption changes must be synced to the manifest. gamedata is pruned to `metahook/gamedata/bulletphysics` and merged by the host with the other catalogs.
 - `g_ViewEntityIndex_SCClient` is optional at runtime (resolved with required=false); the manifest requires it only for 10257, and 8948 never had it. The existing three bone-sync usages all guard against null, which is the intended path for 8948. Both Sven versions still require the portal state and pitchdrift.

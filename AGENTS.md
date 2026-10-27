@@ -23,7 +23,7 @@ This file provides guidance and important rules working with code in this reposi
 
 ### When notes are insufficient: source entry points (query and read on demand)
 
-- Build: `CMakeLists.txt`, `cmake/Sources.cmake` (explicit compile list), `cmake/Dependencies.cmake` (source-path resolution and FetchContent fallback), `cmake/VCLTL.cmake`, `scripts/build-BulletPhysics-x86-{Debug,Release}.bat`
+- Build: `CMakeLists.txt`, `cmake/Sources.cmake` (explicit compile list), `cmake/Dependencies.cmake` (source-path resolution and FetchContent fallback), `scripts/build-BulletPhysics-x86-{Debug,Release}.bat`
 - Plugin sources: `src/`; lifecycle entry `src/plugins.cpp`, engine/client hooks and gamedata `src/privatehook.cpp` and `src/exportfuncs.cpp`, manager contract `src/ClientPhysicManager.h` with the backend-agnostic `src/BasePhysicManager.*` and the Bullet `src/BulletPhysicManager.*`, VGUI2Extension debug/editing UI `src/Viewport.*`, `src/Physic*`, `src/AnimControl*`
 - Runtime assets: `assets/svencoop/bulletphysics/` (`.res` layouts and localization) and `assets/svencoop_downloads/models/` (physics configurations and collision OBJ meshes), installed alongside the DLL
 - gamedata: `scripts/manifests/bulletphysics.json` (same schema as MetaHook), `scripts/sync-gamedata.py`, `scripts/validate-gamedata.py`; the build-time sync prunes the upstream catalog into the nested `metahook/gamedata/bulletphysics/` directory, which the host launcher merges

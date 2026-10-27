@@ -27,8 +27,8 @@ scripts\build-BulletPhysics-x86-Release.bat
 | --- | --- | --- |
 | `METAHOOK_SOURCE_PATH` | MetaHook API、HLSDK/SourceSDK/VGUI 源码与 `IPanel2.h` | 最新 `main` |
 | `VGUI2EXTENSION_SOURCE_PATH` | `include/Interface` 下的公共接口 | `cd7ef6e3b7fb51d3c98e6d7dadec02dd1fa08c4f` |
-| `GLEW_SOURCE_PATH` | 提供 `libglew_static` 的 glew-cmake | `56ed32d4a929f993f0e6b7f905af9be4d38fda04` |
-| `BULLET3_SOURCE_PATH` | hzqst Bullet3 fork，含 `src/btBulletDynamicsCommon.h` | `1ece383aeb5a148533ad5c0cd829cd10d38117c3` |
+| `GLEW_SOURCE_PATH` | 提供 `libglew_static` 的 glew-cmake | `459d9b95457c5db337e2742a5501c21faddda326` |
+| `BULLET3_SOURCE_PATH` | hzqst Bullet3 fork，含 `src/btBulletDynamicsCommon.h` | `55db1ffd033943718f34b013d6e17767ad1dd054` |
 
 ```bat
 scripts\build-BulletPhysics-x86-Release.bat ^
@@ -45,7 +45,6 @@ scripts\build-BulletPhysics-x86-Release.bat ^
 构建树中静态编译。ScopeExit、tinyobjloader、Chocobo1Hash 为固定提交子模块，配置时初始化。
 本工程不需要 SDL、Capstone 或 FreeImage 构建。
 
-VC-LTL 5.3.1 通过 SHA-256 校验后缓存到 `thirdparty/cache/`，Debug/Release 共用。
 采用 C++20、`/MTd` / `/MT`，Release 启用 LTO。Bullet 使用单精度，关闭 SDK 安装、
 demos、extras 和 Python bindings。
 

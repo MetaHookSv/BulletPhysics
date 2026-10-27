@@ -13,8 +13,7 @@ Windows MSVC x86、CMake 3.21+，仅 Debug/Release。`scripts/build-BulletPhysic
 
 `cmake/Dependencies.cmake` 提供环境变量/显式源码路径与 FetchContent 回退（MetaHook 跟踪最新 `main`），
 先校验显式路径再下载。原 vcxproj 167 个编译项显式列于 `cmake/Sources.cmake`。
-VC-LTL 5.3.1 SHA-256 与 Renderer 一致，缓存位于 `thirdparty/cache`，Debug/Release 共用。
-Bullet/GLEW 使用父工程 VC-LTL；Bullet 保留单精度，关闭额外程序与 SDK 安装。
+Bullet 保留单精度，关闭额外程序与 SDK 安装。
 
 ## gamedata 和安装
 
