@@ -50,7 +50,9 @@ demos、extras 和 Python bindings。
 
 `scripts/manifests/bulletphysics.json` 声明 24 个版本的模块、kind、必需符号与条件分组。
 `g_ViewEntityIndex_SCClient` 只在 10257 必需；8948 本来就不发布它。客户端 Studio virtual
-保持可选。`zp-10210` 客户端快照提供 `g_iUser1` 和 `g_iUser2`。
+保持可选。`zp-10210` 客户端快照提供 `g_iUser1`、`g_iUser2`，以及 GoldSrc_VibeSignatures
+`v20261107b` 发布的 `GameStudioRenderer` 虚函数 `StudioDrawModel`、`StudioDrawPlayer`
+和 `StudioSetupBones`。
 仅含客户端的快照与对应引擎版本的 catalog 配合使用。
 
 `BULLETPHYSICS_SYNC_GAMEDATA` 默认 `ON`，DLL 构建前同步、裁剪并校验上游数据，

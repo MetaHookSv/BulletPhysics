@@ -61,7 +61,9 @@ Bullet stays single precision and its SDK, demos, extras and Python bindings are
 `scripts/manifests/bulletphysics.json` declares module ownership, kind, required
 symbols and conditional coverage for 24 identities. `g_ViewEntityIndex_SCClient`
 is required only for 10257; 8948 does not publish it. Client Studio virtuals remain
-optional. The `zp-10210` client snapshot supplies `g_iUser1` and `g_iUser2`.
+optional. The `zp-10210` client snapshot supplies `g_iUser1`, `g_iUser2` and the
+`GameStudioRenderer` virtuals `StudioDrawModel`, `StudioDrawPlayer` and
+`StudioSetupBones` published in GoldSrc_VibeSignatures `v20261107b`.
 Client-only snapshots use the matching engine identity's catalog.
 
 `BULLETPHYSICS_SYNC_GAMEDATA` defaults to `ON`: sync and validation run before

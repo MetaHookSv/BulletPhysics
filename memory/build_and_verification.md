@@ -95,3 +95,11 @@ Release 下插件目标为 `/GL`，测试链接使用 `/LTCG`。
 - 验证：聚合树 Release 的 `BulletPhysicsGameDataValidate` 目标成功，从线上 index 同步并裁剪 24 个快照，manifest 校验及 `sync-gamedata.py --validate-only` 通过。
 - 裁剪后的 `zp-10210.json` 保留 Windows client CRC64 `49f07086f0defc0d`、三个 DLL alias，以及 `g_iUser1` / `g_iUser2` 的 global 记录。上游原始快照 SHA-256 为 `b1de6664c58f1189254d6d8933ddf752efdb6489214e8a252ca75f31f1e1caa9`。
 - 验证边界：仅变更 manifest 和说明文档；未重编译 DLL，按用户要求未启动 `zp-10210`，不据此宣称游戏内物理或视觉效果已验证。
+
+2026-11-07，`zp-10210` 客户端 Studio gamedata（上游 v20261107b）：
+
+- 触发信号：GoldSrc_VibeSignatures [v20261107b](https://github.com/HLND2T/GoldSrc_VibeSignatures/releases/tag/v20261107b) 补充了 `zp-10210` 的 GameStudioRenderer 虚函数；此前同版本快照只为插件提供观战状态 globals。
+- 处理：现有 manifest 已选择 `zp-10210`，且 `optionalSymbols.client` 已声明 `GameStudioRenderer_StudioDrawModel`、`GameStudioRenderer_StudioDrawPlayer`、`GameStudioRenderer_StudioSetupBones`。同步新快照即保留三项，沿用 `src/exportfuncs.cpp` 的可选解析和 hook 安装路径，无需重复声明或修改 C++。
+- 验证：聚合树 Release 的 `BulletPhysicsGameDataValidate` 目标成功，同步裁剪 24 个快照；manifest 校验和独立 `sync-gamedata.py --validate-only` 均通过。最终 `zp-10210.json` 保留三个 Studio virtualFunction 和原有 `g_iUser1` / `g_iUser2` globals。
+- 同步来源：上游原始快照 SHA-256 为 `7121ea9a3b71e7211c63da382414a8b469c38c55fe20c4a3e48f7516e2b435b4`；client CRC64 仍为 `49f07086f0defc0d`，三个 DLL alias 保持。
+- 验证边界：更新说明和验证记录，gamedata 为构建生成的忽略产物；未重编译 DLL，按用户要求未启动 `zp-10210`，未验证游戏内物理或视觉效果。
