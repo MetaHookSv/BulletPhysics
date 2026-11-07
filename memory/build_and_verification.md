@@ -17,7 +17,7 @@ Bullet 保留单精度，关闭额外程序与 SDK 安装。
 
 ## gamedata 和安装
 
-manifest 覆盖 23 个版本，声明必需、可选和 Sven/CS/CZ 条件符号。构建同步与校验默认开启，
+manifest 覆盖 24 个版本，声明必需、可选和 Sven/CS/CZ 条件符号；包含 `zp-10210` 客户端。构建同步与校验默认开启，
 原始缓存支持离线。Sven 8948 不要求视角实体槽；10257 在发布门禁中要求它。
 六个旧 Half-Life 版本只有 engine 数据，不能据此宣称客户端能加载。
 
@@ -86,3 +86,12 @@ Release 下插件目标为 `/GL`，测试链接使用 `/LTCG`。
   均保留必需的 `g_iUser1` / `g_iUser2`。bshift 的可选客户端 StudioRenderer 符号正常保留；
   gearbox Windows 使用已有引擎端 hooks，不要求不存在的客户端 StudioRenderer 符号。
 - 验证范围：发布数据的同步、裁剪、完整性和 manifest 覆盖；未进行游戏内启动或物理效果验证。
+
+2026-11-07，`zp-10210` 观战状态 gamedata 支持：
+
+- 触发信号：上游已提供 `zp-10210` 的 `g_iUser1` / `g_iUser2`，插件仍未打包该客户端。
+- 根因与处理：消费端 manifest 的 `gameVersions` 缺少 `zp-10210`；加入该版本，沿用现有必需 global 声明和宿主解析，不添加扫描回退或符号豁免。
+- 范围：源码检索仅 BulletPhysics 和 SCCameraFix 使用这两个符号；SCCameraFix 强制要求 `SCClientDLL001`，专用于 Sven Co-op，不扩展到 `zp`。Renderer 已不使用它们。
+- 验证：聚合树 Release 的 `BulletPhysicsGameDataValidate` 目标成功，从线上 index 同步并裁剪 24 个快照，manifest 校验及 `sync-gamedata.py --validate-only` 通过。
+- 裁剪后的 `zp-10210.json` 保留 Windows client CRC64 `49f07086f0defc0d`、三个 DLL alias，以及 `g_iUser1` / `g_iUser2` 的 global 记录。上游原始快照 SHA-256 为 `b1de6664c58f1189254d6d8933ddf752efdb6489214e8a252ca75f31f1e1caa9`。
+- 验证边界：仅变更 manifest 和说明文档；未重编译 DLL，按用户要求未启动 `zp-10210`，不据此宣称游戏内物理或视觉效果已验证。

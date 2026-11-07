@@ -59,9 +59,10 @@ Bullet stays single precision and its SDK, demos, extras and Python bindings are
 ## gamedata
 
 `scripts/manifests/bulletphysics.json` declares module ownership, kind, required
-symbols and conditional coverage for 17 identities. `g_ViewEntityIndex_SCClient`
+symbols and conditional coverage for 24 identities. `g_ViewEntityIndex_SCClient`
 is required only for 10257; 8948 does not publish it. Client Studio virtuals remain
-optional. CS/CZ client snapshots use the matching engine identity's catalog.
+optional. The `zp-10210` client snapshot supplies `g_iUser1` and `g_iUser2`.
+Client-only snapshots use the matching engine identity's catalog.
 
 `BULLETPHYSICS_SYNC_GAMEDATA` defaults to `ON`: sync and validation run before
 the DLL build, pruning upstream data into the build tree and then installing it
